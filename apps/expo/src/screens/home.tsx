@@ -74,6 +74,7 @@ const CreatePost: React.FC = () => {
 
 export const HomeScreen = () => {
   const postQuery = trpc.post.all.useQuery();
+  const babyQuery = trpc.baby.all.useQuery();
   const [showPost, setShowPost] = React.useState<string | null>(null);
 
   return (
@@ -95,6 +96,15 @@ export const HomeScreen = () => {
             </Text>
           )}
         </View>
+
+        <FlashList
+          data={babyQuery.data}
+          estimatedItemSize={20}
+          ItemSeparatorComponent={() => <View className="h-2" />}
+          renderItem={(baby) => (
+            <Text>{baby.item.name}</Text>
+          )}
+        />
 
         <FlashList
           data={postQuery.data}

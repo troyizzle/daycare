@@ -7,12 +7,11 @@ import { HomeScreen } from "./screens/home";
 import { SignInSignUpScreen } from "./screens/signin";
 import { ClerkProvider, SignedIn, SignedOut } from "@clerk/clerk-expo";
 import { tokenCache } from "./utils/cache";
-import Constants from "expo-constants";
 
 export const App = () => {
   return (
     <ClerkProvider
-      publishableKey={Constants.expoConfig?.extra?.CLERK_PUBLISHABLE_KEY}
+      publishableKey="pk_test_d29uZHJvdXMtY293YmlyZC04LmNsZXJrLmFjY291bnRzLmRldiQ"
       tokenCache={tokenCache}
     >
       <SignedIn>
