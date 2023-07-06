@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Modal, Text, View, StyleSheet, Pressable } from "react-native";
+import { Modal, Text, View, StyleSheet, Pressable, Image } from "react-native";
 import { trpc } from "../utils/trpc";
 import SelectDropdown from 'react-native-select-dropdown'
 import { FlashList } from "@shopify/flash-list";
@@ -16,6 +16,7 @@ function AddActionButton({
       alignSelf: 'flex-end',
       position: 'absolute',
       bottom: 35,
+      right: 10,
     }}>
       <Pressable style={{
         width: 50,
@@ -68,9 +69,26 @@ function NewActionForm({ babyId, modalVisible, setModalVisible }: NewActionFormP
         setModalVisible(!modalVisible);
       }}
     >
-      <View style={styles.centeredView}>
-        <View style={styles.modalView}>
-          <Text>What did you do?</Text>
+      <View className="h-full w-full bg-slate-800 p-4" style={styles.modalView}>
+        <View className="flex flex-row items-center justify-between">
+          <Pressable
+            className="bg-red-500 p-2 rounded place-items-start"
+            onPress={() => setModalVisible(false)}
+          >
+            <Text className="font-bold text-lg text-white">Close</Text>
+          </Pressable>
+          <Pressable
+            onPress={() => mutate({
+              babyId,
+              actionId: actionId,
+            })}
+            className="bg-green-500 p-2 rounded place-items-end"
+          >
+            <Text className="font-bold text-lg text-white">Submit</Text>
+          </Pressable>
+        </View>
+        <View className="flex flex-col gap-2 mt-10 items-center">
+          <Text className="text-white">What did you do?</Text>
           <SelectDropdown
             data={actionQuery.data?.map(action => ({ label: action.name, value: action.id })) ?? []}
             onSelect={(selectedItem) => {
@@ -81,20 +99,13 @@ function NewActionForm({ babyId, modalVisible, setModalVisible }: NewActionFormP
             }}
             rowTextForSelection={(item) => item.label}
           />
-          <Pressable
-            onPress={() => mutate({
-              babyId,
-              actionId: actionId,
-            })}>
-            <Text>Submit</Text>
-          </Pressable>
         </View>
       </View>
     </Modal >
   )
 }
 
-type BabyScreenProps = {c
+type BabyScreenProps = {
   route: any,
 }
 
@@ -107,13 +118,24 @@ export function BabyScreen({ route }: BabyScreenProps) {
 
   return (
     <View
-    className="bg-slate-800 p-2"
-    style={{
-      flex: 1,
-      flexDirection: 'column',
-    }}>
+      className="bg-slate-800 p-2"
+      style={{
+        flex: 1,
+        flexDirection: 'column',
+      }}>
       <View className="flex flex-row">
-        <View><Text>Hey</Text></View>
+        <View>
+          <Image
+            style={{
+              width: 100,
+              height: 100,
+              borderRadius: 100,
+            }}
+            source={{
+              uri: 'https://www.clipartmax.com/png/middle/58-589113_infant-child-happiness-boy-icon-baby-boy-avatar.png',
+            }}
+          />
+        </View>
         <View className="flex flex-row grow ml-4">
           <FlashList
             data={babyQuery.data?.actionLogs ?? []}
@@ -139,11 +161,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   modalView: {
-    margin: 20,
-    backgroundColor: 'white',
+    marginTop: 20,
     borderRadius: 20,
-    padding: 35,
-    alignItems: 'center',
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
