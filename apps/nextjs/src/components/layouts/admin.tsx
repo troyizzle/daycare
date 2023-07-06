@@ -1,6 +1,7 @@
 import { cn } from "@/lib/utils"
 import Link from "next/link"
 import { useRouter } from "next/router"
+import Navbar from "../navbar"
 import { buttonVariants } from "../ui/button"
 
 function SidebarNavMenu() {
@@ -50,19 +51,22 @@ type AdminLayoutProps = {
 
 export default function AdminLayout({ title, children, createForm }: AdminLayoutProps) {
   return (
-    <div className="space-y-6 p-10 pb-16">
-      <div className="flex flex-col space-y-8 lg:flex-row lg:space-x-12 lg:space-y-0">
-        <aside className="-mx-4 lg:w-1/2">
-          <SidebarNavMenu />
-        </aside>
-        <div className="flex-1">
-          <div className="flex justify-between items-center">
-            <h1 className="text-3xl font-bold">{title}</h1>
-            {createForm && createForm}
+    <>
+      <Navbar />
+      <div className="space-y-6 p-10 pb-16">
+        <div className="flex flex-col space-y-8 lg:flex-row lg:space-x-12 lg:space-y-0">
+          <aside className="-mx-4 lg:w-1/2">
+            <SidebarNavMenu />
+          </aside>
+          <div className="flex-1">
+            <div className="flex justify-between items-center">
+              <h1 className="text-3xl font-bold">{title}</h1>
+              {createForm && createForm}
+            </div>
+            {children}
           </div>
-          {children}
         </div>
       </div>
-    </div>
+    </>
   )
 }
