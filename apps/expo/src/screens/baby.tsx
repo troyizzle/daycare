@@ -152,32 +152,46 @@ export function BabyScreen({ route }: BabyScreenProps) {
         flex: 1,
         flexDirection: 'column',
       }}>
-      <View className="flex flex-row">
-        <View>
-          <Image
-            style={{
-              width: 100,
-              height: 100,
-              borderRadius: 100,
-            }}
-            source={{
-              uri: 'https://www.clipartmax.com/png/middle/58-589113_infant-child-happiness-boy-icon-baby-boy-avatar.png',
-            }}
+      {!babyQuery.data ? (
+        <Text>Loading...</Text>
+      ) : (
+        <>
+          <View className="flex flex-row">
+            <View>
+              <Image
+                style={{
+                  width: 100,
+                  height: 100,
+                  borderRadius: 100,
+                }}
+                source={{
+                  uri: 'https://www.clipartmax.com/png/middle/58-589113_infant-child-happiness-boy-icon-baby-boy-avatar.png',
+                }}
+              />
+            </View>
+            <View className="flex flex-col grow ml-4">
+              <Text className="text-white text-2xl">
+                {babyQuery.data?.firstName} {babyQuery.data?.lastName}
+              </Text>
+              {babyQuery.data.mood && (
+                <Text className="text-white text-lg">
+                  Current mood: {babyQuery.data.mood}
+                </Text>
+              )}
+            </View>
+          </View >
+          <FlashList
+            data={babyQuery.data?.actionLogs ?? []}
+            estimatedItemSize={100}
+            ItemSeparatorComponent={() => <View className="border-t border-gray-500" style={{ height: 10 }} />}
+            renderItem={({ item }) => (
+              <BabyActionLogView log={item} />
+            )}
           />
-        </View>
-        <View className="flex flex-row grow ml-4">
-        </View>
-      </View>
-      <FlashList
-        data={babyQuery.data?.actionLogs ?? []}
-        estimatedItemSize={100}
-        ItemSeparatorComponent={() => <View className="border-t border-gray-500" style={{ height: 10 }} />}
-        renderItem={({ item }) => (
-          <BabyActionLogView log={item} />
-        )}
-      />
-      <NewActionForm babyId={babyId} modalVisible={modalVisible} setModalVisible={setModalVisible} />
-      <AddActionButton setModalVisible={setModalVisible} />
+          <NewActionForm babyId={babyId} modalVisible={modalVisible} setModalVisible={setModalVisible} />
+          <AddActionButton setModalVisible={setModalVisible} />
+        </>
+      )}
     </View >
   )
 }

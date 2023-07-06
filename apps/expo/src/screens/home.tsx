@@ -1,7 +1,6 @@
 import React from "react";
 
 import { Button, Image, Text, TouchableOpacity, View } from "react-native";
-import { useAuth } from "@clerk/clerk-expo";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { FlashList } from "@shopify/flash-list";
 import type { inferProcedureOutput } from "@trpc/server";
@@ -28,7 +27,7 @@ function BabyView({ baby }: BabyViewProps) {
         />
       </View>
       <View className="flex flex-col flex-1">
-        <Text className="text-2xl text-white">{baby.name}</Text>
+        <Text className="text-2xl text-white">{baby.firstName}</Text>
         <Text className="text-white text-sm">Last action taken: </Text>
       </View>
     </View>
@@ -47,7 +46,7 @@ export const HomeScreen = ({ navigation }) => {
             estimatedItemSize={20}
             ItemSeparatorComponent={() => <View className="h-2" />}
             renderItem={(baby) => (
-              <TouchableOpacity onPress={() => navigation.navigate('Baby', { babyId: baby.item.id, name: baby.item.name})}>
+              <TouchableOpacity onPress={() => navigation.navigate('Baby', { babyId: baby.item.id, name: baby.item.firstName})}>
                 <BabyView baby={baby.item} />
               </TouchableOpacity>
             )}
