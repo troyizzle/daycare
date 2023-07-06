@@ -1,3 +1,6 @@
+import { trpc } from "../../../utils/trpc"
+
 export default function Page() {
-  return <div>Admin</div>
+  const babyQuery = trpc.baby.all.useQuery();
+  return <div>Hello</div>
 }
