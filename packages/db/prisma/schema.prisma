@@ -40,5 +40,6 @@ model BabyActionLog {
   action    Action   @relation(fields: [actionId], references: [id])
   actionId  String
   teacherId String
+  notes     String?
   createdAt DateTime @default(now())
 }

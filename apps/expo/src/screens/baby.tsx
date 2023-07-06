@@ -3,6 +3,35 @@ import { Modal, Text, View, StyleSheet, Pressable, Image } from "react-native";
 import { trpc } from "../utils/trpc";
 import SelectDropdown from 'react-native-select-dropdown'
 import { FlashList } from "@shopify/flash-list";
+import { Action, BabyActionLog } from ".prisma/client";
+
+type BabyActionLogViewProps = {
+  log: BabyActionLog & {
+    action: Action
+    teacher: {
+      firstName: string
+    }
+  }
+}
+
+function formattedLogName(log: BabyActionLogViewProps['log']) {
+  return `${log.action.name} at ${new Date(log.createdAt).toLocaleTimeString()}`
+}
+
+function BabyActionLogView({ log }: BabyActionLogViewProps) {
+  return (
+    <View className="py-2">
+      <View>
+        <Text className="text-white text-2xl ">
+          {formattedLogName(log)}
+        </Text>
+        <Text className="text-white">
+          {log.teacher.firstName}
+        </Text>
+      </View>
+    </View>
+  )
+}
 
 type AddActionButtonProps = {
   setModalVisible: (visible: boolean) => void,
@@ -137,17 +166,16 @@ export function BabyScreen({ route }: BabyScreenProps) {
           />
         </View>
         <View className="flex flex-row grow ml-4">
-          <FlashList
-            data={babyQuery.data?.actionLogs ?? []}
-            estimatedItemSize={100}
-            renderItem={({ item }) => (
-              <View className="flex flex-row">
-                <Text className="text-white">{item.action.name}</Text>
-              </View>
-            )}
-          />
         </View>
       </View>
+      <FlashList
+        data={babyQuery.data?.actionLogs ?? []}
+        estimatedItemSize={100}
+        ItemSeparatorComponent={() => <View className="border-t border-gray-500" style={{ height: 10 }} />}
+        renderItem={({ item }) => (
+          <BabyActionLogView log={item} />
+        )}
+      />
       <NewActionForm babyId={babyId} modalVisible={modalVisible} setModalVisible={setModalVisible} />
       <AddActionButton setModalVisible={setModalVisible} />
     </View >
