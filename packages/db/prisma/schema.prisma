@@ -2,21 +2,43 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-    provider = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-    provider = "postgresql"
-    url      = env("DATABASE_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model Post {
-    id      String @id @default(cuid())
-    title   String
-    content String
+  id      String @id @default(cuid())
+  title   String
+  content String
+}
+
+model Class {
+  id   String @id @default(cuid())
+  name String
 }
 
 model Baby {
-    id String @id @default(cuid())
-    name String
+  id         String          @id @default(cuid())
+  name       String
+  actionLogs BabyActionLog[]
+}
+
+model Action {
+  id         String          @id @default(cuid())
+  name       String
+  actionLogs BabyActionLog[]
+}
+
+model BabyActionLog {
+  id        String   @id @default(cuid())
+  baby      Baby     @relation(fields: [babyId], references: [id])
+  babyId    String
+  action    Action   @relation(fields: [actionId], references: [id])
+  actionId  String
+  teacherId String
+  createdAt DateTime @default(now())
 }
