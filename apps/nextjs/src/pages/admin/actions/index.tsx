@@ -1,4 +1,4 @@
-import { Button } from "../../../../@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import { trpc } from "../../../utils/trpc"
 
 export default function Page() {
