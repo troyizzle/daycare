@@ -23,7 +23,10 @@ model Class {
 
 model Baby {
   id         String          @id @default(cuid())
-  name       String
+  firstName  String?
+  lastName   String?
+  dob        DateTime?
+  mood       String?
   actionLogs BabyActionLog[]
 }
 
