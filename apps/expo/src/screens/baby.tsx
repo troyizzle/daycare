@@ -82,7 +82,7 @@ function NewActionForm({ babyId, modalVisible, setModalVisible }: NewActionFormP
   const utils = trpc.useContext();
   const { mutate } = trpc.baby.createLog.useMutation({
     async onSuccess() {
-      await utils.baby.all.invalidate();
+      await utils.baby.byId.invalidate();
       setModalVisible(false);
     },
   })

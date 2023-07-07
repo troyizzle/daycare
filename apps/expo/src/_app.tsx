@@ -10,6 +10,8 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer } from '@react-navigation/native';
 import { Button, Image } from "react-native";
 import { BabyScreen } from "./screens/baby";
+import ScreenHeaderBtn from "./components/screen-header-btn";
+import { icons } from "./constants";
 
 const Stack = createNativeStackNavigator();
 
@@ -35,7 +37,16 @@ export const App = () => {
                     headerTitleStyle: {
                       fontWeight: 'bold',
                     },
+                    headerTitle: '',
                     headerLeft: () => {
+                      return <ScreenHeaderBtn
+                        iconUrl={icons.menu}
+                        dimension='60%'
+                        handlePress={() => console.log('pressed')
+                        }
+                      />
+                    },
+                    headerRight: () => {
                       const { user } = useUser();
 
                       return (
