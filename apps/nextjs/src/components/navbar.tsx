@@ -5,10 +5,33 @@ import { Icons } from "./icons";
 import { Avatar, AvatarImage } from "./ui/avatar";
 import { useClerk, useUser } from "@clerk/nextjs";
 import { UserResource } from "@clerk/types"
+import { useTheme } from "next-themes"
 
 type UserDropdownMenuProps = {
   user: UserResource
 }
+
+function ThemeToggler() {
+  const { setTheme, theme } = useTheme()
+
+  return (
+    <Button
+      variant="ghost"
+      size="icon"
+      onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+    >
+      <Icons.sun
+        className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0"
+        aria-hidden="true"
+      />
+      <Icons.moon
+        className="h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100"
+        aria-hidden="true"
+      />
+    </Button>
+  )
+}
+
 
 function UserDropdownMenu({ user }: UserDropdownMenuProps) {
   const { signOut } = useClerk()
@@ -52,6 +75,7 @@ export default function Navbar() {
         </div>
         <div className="flex flex-1 items-center justify-end space-x-4">
           <nav className="flex items-center space-x-2">
+          <ThemeToggler />
             {user && (
               <UserDropdownMenu user={user} />
             )}
