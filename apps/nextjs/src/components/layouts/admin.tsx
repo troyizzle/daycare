@@ -15,6 +15,14 @@ function SidebarNavMenu() {
     {
       href: '/admin/babies',
       label: 'Babies',
+    },
+    {
+      href: '/admin/classes',
+      label: 'Classes',
+    },
+    {
+      href: '/admin/users',
+      label: 'Users',
     }
   ]
 
