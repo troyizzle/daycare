@@ -2,10 +2,11 @@ import { trpc } from "@/utils/trpc";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import AdminModalForm from "../admin-modal-form";
-import { FormField, FormItem, FormLabel } from "../ui/form";
+import { FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
 import { Input } from "../ui/input";
 import { zodResolver } from "@hookform/resolvers/zod"
 import { babyCreateSchema, BabyCreateSchema } from "@/schema/baby";
+import { toast } from "sonner";
 
 export default function NewBabyForm() {
   const [open, setIsOpen] = useState(false);
@@ -17,7 +18,7 @@ export default function NewBabyForm() {
       setIsOpen(false)
     },
     onError: (error) => {
-      console.error(error);
+      toast.error(error.message)
     }
   })
 
@@ -44,6 +45,7 @@ export default function NewBabyForm() {
           <FormItem>
             <FormLabel>First Name</FormLabel>
             <Input {...field} />
+            <FormMessage />
           </FormItem>
         )}
       />
@@ -55,6 +57,7 @@ export default function NewBabyForm() {
           <FormItem>
             <FormLabel>Last Name</FormLabel>
             <Input {...field} />
+            <FormMessage />
           </FormItem>
         )}
       />
