@@ -2,6 +2,12 @@ import { router, publicProcedure, protectedProcedure } from "../trpc";
 import { z } from "zod";
 import { clerkClient } from "@clerk/nextjs"
 
+const babyCreateSchema = z.object({
+  firstName: z.string().min(1).max(40),
+  lastName: z.string().min(1).max(40),
+})
+
+
 export const babyRouter = router({
   all: publicProcedure.query(({ ctx }) => {
     return ctx.prisma.baby.findMany();
@@ -45,6 +51,13 @@ export const babyRouter = router({
       }))
     }
   }),
+  create: protectedProcedure.input(babyCreateSchema)
+    .mutation(({ ctx, input }) => {
+      return ctx.prisma.baby.create({
+        data: input
+      });
+    }
+  ),
   createLog: protectedProcedure
   .input(z.object({
     babyId: z.string(),
