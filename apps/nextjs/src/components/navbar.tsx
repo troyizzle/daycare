@@ -6,6 +6,7 @@ import { Avatar, AvatarImage } from "./ui/avatar";
 import { useClerk, useUser } from "@clerk/nextjs";
 import { UserResource } from "@clerk/types"
 import { useTheme } from "next-themes"
+import MobileNav from "./mobile-nav";
 
 type UserDropdownMenuProps = {
   user: UserResource
@@ -68,6 +69,7 @@ export default function Navbar() {
   return (
     <header className="sticky top-0 z-40 w-full border-b bg-background">
       <div className="container flex h-16 items-center">
+        <MobileNav />
         <div className="hidden gap-6 md:flex">
           <Link href="/">
             Day Care
