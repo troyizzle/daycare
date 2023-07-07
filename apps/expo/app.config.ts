@@ -3,8 +3,8 @@ import { ExpoConfig, ConfigContext } from "@expo/config";
 const CLERK_PUBLISHABLE_KEY = "your-clerk-publishable-key";
 
 const defineConfig = (_ctx: ConfigContext): ExpoConfig => ({
-  name: "expo",
-  slug: "expo",
+  name: "daycare",
+  slug: "daycare",
   version: "1.0.0",
   orientation: "portrait",
   icon: "./assets/icon.png",
@@ -30,7 +30,7 @@ const defineConfig = (_ctx: ConfigContext): ExpoConfig => ({
   },
   extra: {
     eas: {
-      projectId: "your-project-id",
+      projectId: "192b81d6-e739-44f5-ae0d-764207dde324",
     },
     CLERK_PUBLISHABLE_KEY,
   },
