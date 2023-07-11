@@ -58,10 +58,26 @@ export const babyRouter = router({
       });
     }
   ),
+  updateMood: protectedProcedure
+  .input(z.object({
+    babyId: z.string(),
+    mood: z.string()
+  }))
+  .mutation(({ ctx, input }) => {
+    return ctx.prisma.baby.update({
+      where: {
+        id: input.babyId
+      },
+      data: {
+        mood: input.mood
+      }
+    })
+  }),
   createLog: protectedProcedure
   .input(z.object({
     babyId: z.string(),
     actionId: z.string(),
+    notes: z.string(),
   }))
   .mutation(({ ctx, input }) => {
     return ctx.prisma.babyActionLog.create({

@@ -1,23 +1,26 @@
 import React from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { TRPCProvider } from "./utils/trpc";
-
 import { HomeScreen } from "./screens/home";
 import { SignInSignUpScreen } from "./screens/signin";
 import { ClerkProvider, SignedIn, SignedOut, useUser } from "@clerk/clerk-expo";
 import { tokenCache } from "./utils/cache";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { NavigationContainer } from '@react-navigation/native';
-import { Button, Image } from "react-native";
+import { NavigationContainer, useTheme } from '@react-navigation/native';
+import { Image, useColorScheme } from "react-native";
 import { BabyScreen } from "./screens/baby";
 import ScreenHeaderBtn from "./components/screen-header-btn";
+import { DefaultTheme, DarkTheme } from "@react-navigation/native"
 import { icons } from "./constants";
 
 const Stack = createNativeStackNavigator();
 
 export const App = () => {
+  const scheme = useColorScheme();
+  const { colors } = useTheme()
+
   return (
-    <NavigationContainer>
+    <NavigationContainer theme={scheme == 'dark' ? DarkTheme : DefaultTheme}>
       <ClerkProvider
         publishableKey="pk_test_d29uZHJvdXMtY293YmlyZC04LmNsZXJrLmFjY291bnRzLmRldiQ"
         tokenCache={tokenCache}
@@ -31,9 +34,9 @@ export const App = () => {
                   component={HomeScreen}
                   options={{
                     headerStyle: {
-                      backgroundColor: '#cc66ff',
+                      backgroundColor: colors.background
                     },
-                    headerTintColor: '#fff',
+                    headerTintColor: colors.background,
                     headerTitleStyle: {
                       fontWeight: 'bold',
                     },
@@ -51,7 +54,7 @@ export const App = () => {
 
                       return (
                         <Image
-                          source={{uri: user?.profileImageUrl}}
+                          source={{ uri: user?.profileImageUrl }}
                           style={{
                             width: 32,
                             height: 32,
@@ -66,13 +69,14 @@ export const App = () => {
                   name="Baby"
                   component={BabyScreen}
                   options={({ route }) => ({
-                    title: route.params.name,
+                    title: route?.params?.name ?? 'Baby',
                     headerStyle: {
-                      backgroundColor: '#cc66ff',
+                      backgroundColor: colors.background,
                     },
-                    headerTintColor: '#fff',
+                    headerTintColor: colors.text,
                     headerTitleStyle: {
                       fontWeight: 'bold',
+                      color: colors.text
                     }
                   })}
                 />
@@ -84,6 +88,6 @@ export const App = () => {
           <SignInSignUpScreen />
         </SignedOut>
       </ClerkProvider>
-    </NavigationContainer>
+    </NavigationContainer >
   );
 };

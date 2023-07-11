@@ -25,7 +25,7 @@ const styles = (dimension: string) => StyleSheet.create({
   btnContainer: {
     width: 40,
     height: 40,
-    backgroundColor: COLORS.white,
+    backgroundColor: COLORS.primary,
     borderRadius: SIZES.small / 1.25,
     justifyContent: "center",
     alignItems: "center",
@@ -34,5 +34,6 @@ const styles = (dimension: string) => StyleSheet.create({
     width: dimension,
     height: dimension,
     borderRadius: SIZES.small / 1.25,
+    color: COLORS.white,
   },
 });
