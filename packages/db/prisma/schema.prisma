@@ -46,3 +46,18 @@ model BabyActionLog {
   notes     String?
   createdAt DateTime @default(now())
 }
+
+model Role {
+  id       String     @id @default(cuid())
+  name     String     @unique
+  UserRole UserRole[]
+}
+
+model UserRole {
+  id     String @id @default(cuid())
+  userId String
+  role   Role   @relation(fields: [roleId], references: [id])
+  roleId String
+
+  @@unique([userId, roleId])
+}
