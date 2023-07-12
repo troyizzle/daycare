@@ -1,13 +1,15 @@
 import { router } from "../trpc";
-import { babyRouter } from "./baby";
 import { actionRouter } from "./action";
-import { classRouter } from "./class";
 import { userRouter } from "./user";
+import { roleRouter } from "./role";
+import { classroomRouter } from "./classroom";
+import { studentRouter } from "./student";
 
 export const appRouter = router({
   action: actionRouter,
-  baby: babyRouter,
-  class: classRouter,
+  student: studentRouter,
+  classroom: classroomRouter,
+  role: roleRouter,
   user: userRouter
 });
 

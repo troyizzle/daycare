@@ -5,16 +5,16 @@ import AdminModalForm from "../admin-modal-form";
 import { FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
 import { Input } from "../ui/input";
 import { zodResolver } from "@hookform/resolvers/zod"
-import { ClassCreateInput, classCreateSchema } from "@/schema/class";
 import { toast } from "sonner";
+import { ClassroomCreateInput, classroomCreateSchema } from "@acme/db/schema/classroom";
 
-export default function NewClassForm() {
+export default function NewClassRoomForm() {
   const [open, setIsOpen] = useState(false);
   const ctx = trpc.useContext();
 
-  const { mutate } = trpc.class.create.useMutation({
+  const { mutate } = trpc.classroom.create.useMutation({
     onSuccess: async () => {
-      await ctx.class.all.invalidate();
+      await ctx.classroom.all.invalidate();
       setIsOpen(false)
       toast.success("Class created")
     },
@@ -24,19 +24,19 @@ export default function NewClassForm() {
     }
   })
 
-  function onSubmit(data: ClassCreateInput) {
+  function onSubmit(data: ClassroomCreateInput) {
     mutate(data)
   }
 
-  const form = useForm<ClassCreateInput>({
-    resolver: zodResolver(classCreateSchema)
+  const form = useForm<ClassroomCreateInput>({
+    resolver: zodResolver(classroomCreateSchema)
   })
 
   return (
     <AdminModalForm
       form={form}
       onSubmit={onSubmit}
-      modalTitle="New Class"
+      modalTitle="New Classroom"
       open={open}
       setIsOpen={setIsOpen}
     >

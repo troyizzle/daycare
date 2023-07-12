@@ -1,19 +1,19 @@
 import { router, publicProcedure, protectedProcedure } from "../trpc";
-import { classCreateSchema, classUpdateSchema } from "../../../db/schema/class";
+import { classroomCreateSchema, classroomUpdateSchema } from "../../../db/schema/classroom";
 import { z } from "zod";
 import { inferProcedureOutput } from "@trpc/server";
 import { AppRouter } from ".";
 
-export type ClassByIdResponse = inferProcedureOutput<AppRouter["class"]["byId"]>;
+export type ClassroomByIdResponse = inferProcedureOutput<AppRouter["classroom"]["byId"]>;
 
-export const classRouter = router({
+export const classroomRouter = router({
   all: publicProcedure.query(({ ctx }) => {
-    return ctx.prisma.class.findMany();
+    return ctx.prisma.classroom.findMany();
   }),
   byId: protectedProcedure
   .input(z.object({ id: z.string() }))
   .query(({ ctx, input }) => {
-    return ctx.prisma.class.findUnique({
+    return ctx.prisma.classroom.findUnique({
       where: {
         id: input.id,
       },
@@ -23,19 +23,19 @@ export const classRouter = router({
     });
   }),
   create: protectedProcedure
-    .input(classCreateSchema)
+    .input(classroomCreateSchema)
     .mutation(({ ctx, input }) => {
-      return ctx.prisma.class.create({
+      return ctx.prisma.classroom.create({
         data: input
       });
     }
   ),
   update: protectedProcedure
-    .input(classUpdateSchema)
+    .input(classroomUpdateSchema)
     .mutation(({ ctx, input }) => {
       const { id, ...data } = input;
 
-      return ctx.prisma.class.update({
+      return ctx.prisma.classroom.update({
         where: { id },
         data: {
           data

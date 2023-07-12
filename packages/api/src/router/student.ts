@@ -2,15 +2,9 @@ import { router, publicProcedure, protectedProcedure } from "../trpc";
 import { z } from "zod";
 import { clerkClient } from "@clerk/nextjs"
 
-const babyCreateSchema = z.object({
-  firstName: z.string().min(1).max(40),
-  lastName: z.string().min(1).max(40),
-})
-
-
-export const babyRouter = router({
+export const studentRouter = router({
   all: publicProcedure.query(({ ctx }) => {
-    return ctx.prisma.baby.findMany();
+    return ctx.prisma.student.findMany();
   }),
   byId: protectedProcedure.input(
     z.object({
@@ -18,7 +12,7 @@ export const babyRouter = router({
     })
   )
   .query(async ({ ctx, input }) => {
-    const data = await ctx.prisma.baby.findUnique({
+    const data = await ctx.prisma.student.findUnique({
       where: {
         id: input.id
       },
@@ -51,20 +45,20 @@ export const babyRouter = router({
       }))
     }
   }),
-  create: protectedProcedure.input(babyCreateSchema)
-    .mutation(({ ctx, input }) => {
-      return ctx.prisma.baby.create({
-        data: input
-      });
-    }
-  ),
+  // create: protectedProcedure.input(babyCreateSchema)
+  //   .mutation(({ ctx, input }) => {
+  //     return ctx.prisma.baby.create({
+  //       data: input
+  //     });
+  //   }
+  // ),
   updateMood: protectedProcedure
   .input(z.object({
     babyId: z.string(),
     mood: z.string()
   }))
   .mutation(({ ctx, input }) => {
-    return ctx.prisma.baby.update({
+    return ctx.prisma.student.update({
       where: {
         id: input.babyId
       },
@@ -75,12 +69,12 @@ export const babyRouter = router({
   }),
   createLog: protectedProcedure
   .input(z.object({
-    babyId: z.string(),
+    studentId: z.string(),
     actionId: z.string(),
     notes: z.string(),
   }))
   .mutation(({ ctx, input }) => {
-    return ctx.prisma.babyActionLog.create({
+    return ctx.prisma.studentActionLog.create({
       data: {
         ...input,
         teacherId: ctx.auth.userId

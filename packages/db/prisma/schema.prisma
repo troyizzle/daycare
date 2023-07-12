@@ -16,38 +16,62 @@ model Post {
   content String
 }
 
-model Class {
-  id            String          @id @default(cuid())
-  name          String
-  teachers ClassTeachers[]
+model Classroom {
+  id                String              @id @default(cuid())
+  name              String              @unique
+  teachers          ClassroomTeachers[]
+  ClassroomStudents ClassroomStudents[]
 }
 
-model ClassTeachers {
-  id        String @id @default(cuid())
-  class     Class  @relation(fields: [classId], references: [id])
-  classId   String
-  teacherId String
+model ClassroomTeachers {
+  id          String    @id @default(cuid())
+  classroom   Classroom @relation(fields: [classroomId], references: [id])
+  classroomId String
+  teacherId   String
 }
 
-model Baby {
-  id         String          @id @default(cuid())
-  firstName  String?
-  lastName   String?
-  dob        DateTime?
-  mood       String?
-  actionLogs BabyActionLog[]
+model ClassroomStudents {
+  id          String    @id @default(cuid())
+  classroom   Classroom @relation(fields: [classroomId], references: [id])
+  classroomId String
+  student     Student   @relation(fields: [studentId], references: [id])
+  studentId   String
+
+  @@unique([classroomId, studentId])
+}
+
+model Student {
+  id            String              @id @default(cuid())
+  firstName     String
+  lastName      String
+  dob           DateTime
+  mood          String?
+  actionLogs    StudentActionLog[]
+  classrooms    ClassroomStudents[]
+  ParentStudent ParentStudent[]
+}
+
+model ParentStudent {
+  id        String  @id @default(cuid())
+  userId    String
+  student   Student @relation(fields: [studentId], references: [id])
+  studentId String
+
+  @@unique([userId, studentId])
 }
 
 model Action {
-  id         String          @id @default(cuid())
+  id         String             @id @unique @default(cuid())
   name       String
-  actionLogs BabyActionLog[]
+  actionLogs StudentActionLog[]
+
+  @@unique([name])
 }
 
-model BabyActionLog {
+model StudentActionLog {
   id        String   @id @default(cuid())
-  baby      Baby     @relation(fields: [babyId], references: [id])
-  babyId    String
+  student   Student  @relation(fields: [studentId], references: [id])
+  studentId String
   action    Action   @relation(fields: [actionId], references: [id])
   actionId  String
   teacherId String

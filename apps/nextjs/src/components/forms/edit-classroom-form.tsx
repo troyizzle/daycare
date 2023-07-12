@@ -1,19 +1,26 @@
 import { trpc } from "@/utils/trpc"
-import { ClassByIdResponse } from "@acme/api/src/router/class"
-import { ClassUpdateInput, classUpdateSchema } from "@acme/db/schema/class"
+import { ClassroomByIdResponse } from "@acme/api/src/router/classroom"
+import { ClassroomUpdateInput, classroomUpdateSchema } from "@acme/db/schema/classroom"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { FormEvent, ReactNode } from "react"
+import { FormEvent } from "react"
 import { useForm } from "react-hook-form"
 import { toast } from "sonner"
 import { Checkbox } from "../ui/checkbox"
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "../ui/form"
 import { Input } from "../ui/input"
 
-type EditClassFormProps = {
-  classroom: ClassByIdResponse
+type EditClassroomFormProps = {
+  classroom: ClassroomByIdResponse
 }
 
-export default function EditClassForm({ classroom }: EditClassFormProps) {
+export default function EditClassroomForm({ classroom }: EditClassroomFormProps) {
+  const form = useForm<ClassroomUpdateInput>({
+    resolver: zodResolver(classroomUpdateSchema),
+    defaultValues: {
+      ...classroom,
+    }
+  })
+
   if (!classroom) {
     return null
   }
@@ -23,21 +30,14 @@ export default function EditClassForm({ classroom }: EditClassFormProps) {
 
   const teacherIds = classroom.teachers.map((teacher) => teacher.id)
 
-  const { mutate } = trpc.class.update.useMutation({
+  const { mutate } = trpc.classroom.update.useMutation({
     onSuccess: async () => {
       toast.success("Class updated")
-      await ctx.class.all.invalidate()
+      await ctx.classroom.all.invalidate()
     },
   })
 
-  const form = useForm<ClassUpdateInput>({
-    resolver: zodResolver(classUpdateSchema),
-    defaultValues: {
-      ...classroom,
-    }
-  })
-
-  function onSubmit(data: ClassUpdateInput) {
+  function onSubmit(data: ClassroomUpdateInput) {
     mutate(data)
   }
 
@@ -82,7 +82,7 @@ export default function EditClassForm({ classroom }: EditClassFormProps) {
                   key={user.id}
                   control={form.control}
                   name={`teachers.${index}`}
-                  render={({ field }) => {
+                  render={() => {
                     return (
                       <FormItem
                         key={user.id}

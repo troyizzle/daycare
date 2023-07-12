@@ -17,8 +17,12 @@ function SidebarNavMenu() {
       label: 'Babies',
     },
     {
-      href: '/admin/classes',
-      label: 'Classes',
+      href: '/admin/classrooms',
+      label: 'Classrooms',
+    },
+    {
+      href: '/admin/roles',
+      label: 'Roles',
     },
     {
       href: '/admin/users',
