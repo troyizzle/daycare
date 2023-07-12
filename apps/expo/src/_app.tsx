@@ -9,9 +9,8 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer, useTheme } from '@react-navigation/native';
 import { Image, useColorScheme } from "react-native";
 import { BabyScreen } from "./screens/baby";
-import ScreenHeaderBtn from "./components/screen-header-btn";
 import { DefaultTheme, DarkTheme } from "@react-navigation/native"
-import { icons } from "./constants";
+import { Icon } from "@rneui/base";
 
 const Stack = createNativeStackNavigator();
 
@@ -42,11 +41,11 @@ export const App = () => {
                     },
                     headerTitle: '',
                     headerLeft: () => {
-                      return <ScreenHeaderBtn
-                        iconUrl={icons.menu}
-                        dimension='60%'
-                        handlePress={() => console.log('pressed')
-                        }
+                      return <Icon
+                        name='menu'
+                        color={colors.text}
+                        size={32}
+                        onPress={() => console.log('pressed')}
                       />
                     },
                     headerRight: () => {
@@ -73,6 +72,15 @@ export const App = () => {
                     headerStyle: {
                       backgroundColor: colors.background,
                     },
+                    headerRight: () => {
+                      return <Icon
+                        name='menu'
+                        color={colors.text}
+                        size={32}
+                        onPress={() => console.log('pressed')}
+                      />
+                    },
+
                     headerTintColor: colors.text,
                     headerTitleStyle: {
                       fontWeight: 'bold',
