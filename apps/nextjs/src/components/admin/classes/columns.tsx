@@ -1,8 +1,9 @@
 import { type ColumnDef } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Class } from "@acme/db";
 import { Icons } from "@/components/icons";
+import Link from "next/link";
 
 export const columns: ColumnDef<Class>[] = [
   {
@@ -38,6 +39,11 @@ export const columns: ColumnDef<Class>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
+            <DropdownMenuItem>
+              <Link href={`/admin/classes/${row.original.id}`}>
+                Edit
+              </Link>
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       )

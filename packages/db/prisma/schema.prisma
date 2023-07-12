@@ -17,8 +17,16 @@ model Post {
 }
 
 model Class {
-  id   String @id @default(cuid())
-  name String
+  id            String          @id @default(cuid())
+  name          String
+  teachers ClassTeachers[]
+}
+
+model ClassTeachers {
+  id        String @id @default(cuid())
+  class     Class  @relation(fields: [classId], references: [id])
+  classId   String
+  teacherId String
 }
 
 model Baby {
