@@ -1,10 +1,10 @@
 import { type ColumnDef } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Baby } from "@acme/db";
 import { Icons } from "@/components/icons";
+import { Student } from "@acme/db";
 
-export const columns: ColumnDef<Baby>[] = [
+export const columns: ColumnDef<Student>[] = [
   {
     accessorKey: "id",
     header: "ID",
@@ -27,7 +27,7 @@ export const columns: ColumnDef<Baby>[] = [
   },
   {
     id: "actions",
-    cell: ({ row }) => {
+    cell: () => {
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>

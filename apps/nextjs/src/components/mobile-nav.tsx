@@ -1,12 +1,10 @@
 import Link from "next/link";
-import { useRouter } from "next/router";
 import { useState } from "react";
 import { Icons } from "./icons";
 import { Button } from "./ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
 
 export default function MobileNav() {
-  const pathname = useRouter().pathname;
   const [isOpen, setIsOpen] = useState(false);
 
   return (

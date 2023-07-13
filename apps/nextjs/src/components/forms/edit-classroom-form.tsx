@@ -18,17 +18,17 @@ type EditClassroomFormProps = {
 export default function EditClassroomForm({ classroom }: EditClassroomFormProps) {
   const router = useRouter()
 
-  if (!classroom) {
-    return null
-  }
-
   const form = useForm<ClassroomUpdateInput>({
     resolver: zodResolver(classroomUpdateSchema),
     defaultValues: {
       ...classroom,
-      teachers: classroom.teachers.map((teacher) => teacher.teacherId)
+      teachers: classroom?.teachers.map((teacher) => teacher.teacherId)
     }
   })
+
+  if (!classroom) {
+    return null
+  }
 
   const ctx = trpc.useContext()
   const userQuery = trpc.user.all.useQuery()
