@@ -65,12 +65,31 @@ export const userRouter = router({
           }
         })
 
+        const students = await ctx.prisma.classroomStudents.findMany({
+          where: {
+            classroomId: {
+              in: await ctx.prisma.classroomTeachers.findMany({
+                where: {
+                  teacherId: user.id
+                },
+                select: {
+                  classroomId: true
+                }
+              }).then(records => records.map(record => record.classroomId))
+            }
+          },
+          include: {
+            student: true
+          }
+        })
+
 
 
         return {
           ...user,
           roles: roles,
-          children: children
+          children: children,
+          students: students
         }
       } catch (err) {
         if (isClerkAPIResponseError(err)) {

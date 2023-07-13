@@ -1,11 +1,11 @@
 import { type ColumnDef } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Class } from "@acme/db";
 import { Icons } from "@/components/icons";
 import Link from "next/link";
+import { Classroom } from "@acme/db";
 
-export const columns: ColumnDef<Class>[] = [
+export const columns: ColumnDef<Classroom>[] = [
   {
     accessorKey: "id",
     header: "ID",
@@ -39,11 +39,11 @@ export const columns: ColumnDef<Class>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem>
-              <Link href={`/admin/classes/${row.original.id}`}>
+            <Link href={`/admin/classrooms/${row.original.id}/edit`}>
+              <DropdownMenuItem>
                 Edit
-              </Link>
-            </DropdownMenuItem>
+              </DropdownMenuItem>
+            </Link>
           </DropdownMenuContent>
         </DropdownMenu>
       )

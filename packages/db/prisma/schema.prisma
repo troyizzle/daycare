@@ -17,10 +17,10 @@ model Post {
 }
 
 model Classroom {
-  id                String              @id @default(cuid())
-  name              String              @unique
-  teachers          ClassroomTeachers[]
-  ClassroomStudents ClassroomStudents[]
+  id       String              @id @default(cuid())
+  name     String              @unique
+  teachers ClassroomTeachers[]
+  students ClassroomStudents[]
 }
 
 model ClassroomTeachers {
@@ -28,6 +28,8 @@ model ClassroomTeachers {
   classroom   Classroom @relation(fields: [classroomId], references: [id])
   classroomId String
   teacherId   String
+
+  @@unique([classroomId, teacherId])
 }
 
 model ClassroomStudents {

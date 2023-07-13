@@ -2,9 +2,11 @@ import { trpc } from "@/utils/trpc"
 import { ClassroomByIdResponse } from "@acme/api/src/router/classroom"
 import { ClassroomUpdateInput, classroomUpdateSchema } from "@acme/db/schema/classroom"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useRouter } from "next/router"
 import { FormEvent } from "react"
 import { useForm } from "react-hook-form"
 import { toast } from "sonner"
+import { Button } from "../ui/button"
 import { Checkbox } from "../ui/checkbox"
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "../ui/form"
 import { Input } from "../ui/input"
@@ -14,27 +16,33 @@ type EditClassroomFormProps = {
 }
 
 export default function EditClassroomForm({ classroom }: EditClassroomFormProps) {
-  const form = useForm<ClassroomUpdateInput>({
-    resolver: zodResolver(classroomUpdateSchema),
-    defaultValues: {
-      ...classroom,
-    }
-  })
+  const router = useRouter()
 
   if (!classroom) {
     return null
   }
 
+  const form = useForm<ClassroomUpdateInput>({
+    resolver: zodResolver(classroomUpdateSchema),
+    defaultValues: {
+      ...classroom,
+      teachers: classroom.teachers.map((teacher) => teacher.teacherId)
+    }
+  })
+
   const ctx = trpc.useContext()
   const userQuery = trpc.user.all.useQuery()
 
-  const teacherIds = classroom.teachers.map((teacher) => teacher.id)
-
   const { mutate } = trpc.classroom.update.useMutation({
     onSuccess: async () => {
-      toast.success("Class updated")
+      router.push("/admin/classrooms")
+      toast.success("Classroom updated")
       await ctx.classroom.all.invalidate()
     },
+    onError: (error) => {
+      toast.error(error.message)
+      console.error(error)
+    }
   })
 
   function onSubmit(data: ClassroomUpdateInput) {
@@ -47,7 +55,7 @@ export default function EditClassroomForm({ classroom }: EditClassroomFormProps)
 
   return (
     <Form {...form}>
-      <form className="flex flex-col space-y-3" onSubmit={(event) => {
+      <form className="space-y-8" onSubmit={(event) => {
         event.preventDefault()
         void handleFormSubmit(event)
       }}>
@@ -68,32 +76,46 @@ export default function EditClassroomForm({ classroom }: EditClassroomFormProps)
             </FormItem>
           )}
         />
+
         <FormField
           control={form.control}
           name="teachers"
           render={() => (
             <FormItem>
               <div className="mb-4">
-                <FormLabel>Teachers</FormLabel>
-                <FormDescription>Select the teachers in this classroom</FormDescription>
+                <FormLabel className="text-base">Teachers</FormLabel>
+                <FormDescription>
+                  Select the teachers in this classroom, this will give them permission to view the students in this classroom.
+                </FormDescription>
               </div>
-              {userQuery.data?.map((user, index) => (
+              {userQuery.data?.map((teacher) => (
                 <FormField
-                  key={user.id}
+                  key={teacher.id}
                   control={form.control}
-                  name={`teachers.${index}`}
-                  render={() => {
+                  name="teachers"
+                  render={({ field }) => {
                     return (
                       <FormItem
-                        key={user.id}
-                        className="flex items-center space-x-2"
+                        key={teacher.id}
+                        className="flex flex-row items-start space-x-3 space-y-0"
                       >
                         <FormControl>
                           <Checkbox
-                            checked={teacherIds.includes(user.id)}
+                            checked={field.value?.includes(teacher.id)}
+                            onCheckedChange={(checked) => {
+                              return checked
+                                ? field.onChange([...field.value, teacher.id])
+                                : field.onChange(
+                                  field.value?.filter(
+                                    (value) => value !== teacher.id
+                                  )
+                                )
+                            }}
                           />
                         </FormControl>
-                        <FormLabel className="font-normal">{user.firstName}</FormLabel>
+                        <FormLabel className="font-normal">
+                          {teacher.firstName} {teacher.lastName}
+                        </FormLabel>
                       </FormItem>
                     )
                   }}
@@ -103,6 +125,8 @@ export default function EditClassroomForm({ classroom }: EditClassroomFormProps)
             </FormItem>
           )}
         />
+
+        <Button variant="default" type="submit">Submit</Button>
       </form>
     </Form>
   )

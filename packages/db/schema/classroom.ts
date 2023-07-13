@@ -10,10 +10,7 @@ export type ClassroomCreateInput = z.infer<typeof classroomCreateSchema>
 
 export const classroomUpdateSchema = classroomCreateSchema.extend({
   id: z.string(),
-  teachers: z.array(z.object({
-    id: z.string()
-  })
-  )
+  teachers: z.array(z.string())
 })
 
 export type ClassroomUpdateInput = z.infer<typeof classroomUpdateSchema>

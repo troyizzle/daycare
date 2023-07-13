@@ -13,8 +13,8 @@ function SidebarNavMenu() {
       label: 'Actions',
     },
     {
-      href: '/admin/babies',
-      label: 'Babies',
+      href: '/admin/students',
+      label: 'Students',
     },
     {
       href: '/admin/classrooms',
