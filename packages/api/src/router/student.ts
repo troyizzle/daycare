@@ -1,6 +1,7 @@
 import { router, publicProcedure, protectedProcedure } from "../trpc";
 import { z } from "zod";
 import { clerkClient } from "@clerk/nextjs"
+import { studentProfilePictureSchema, studentUpdateSchema} from "@acme/db/schema/student"
 
 export const studentRouter = router({
   all: publicProcedure.query(({ ctx }) => {
@@ -45,13 +46,18 @@ export const studentRouter = router({
       }))
     }
   }),
-  // create: protectedProcedure.input(babyCreateSchema)
-  //   .mutation(({ ctx, input }) => {
-  //     return ctx.prisma.baby.create({
-  //       data: input
-  //     });
-  //   }
-  // ),
+  updateProfilePicture: protectedProcedure
+  .input(studentProfilePictureSchema)
+  .mutation(({ ctx, input }) => {
+    const { id, ...data } = input
+
+    return ctx.prisma.student.update({
+      where: {
+        id
+      },
+      data
+    })
+  }),
   updateMood: protectedProcedure
   .input(z.object({
     babyId: z.string(),

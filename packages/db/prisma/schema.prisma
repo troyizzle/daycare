@@ -43,14 +43,15 @@ model ClassroomStudents {
 }
 
 model Student {
-  id            String              @id @default(cuid())
-  firstName     String
-  lastName      String
-  dob           DateTime
-  mood          String?
-  actionLogs    StudentActionLog[]
-  classrooms    ClassroomStudents[]
-  ParentStudent ParentStudent[]
+  id             String              @id @default(cuid())
+  firstName      String
+  lastName       String
+  dob            DateTime
+  mood           String?
+  actionLogs     StudentActionLog[]
+  classrooms     ClassroomStudents[]
+  ParentStudent  ParentStudent[]
+  profilePicture String?
 }
 
 model ParentStudent {
