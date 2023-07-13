@@ -3,13 +3,13 @@ import { Modal, View, StyleSheet, Pressable, Image, TextInput } from "react-nati
 import { trpc } from "../utils/trpc";
 import SelectDropdown from 'react-native-select-dropdown'
 import { FlashList } from "@shopify/flash-list";
-import { Action, BabyActionLog } from ".prisma/client";
+import { Action, StudentActionLog } from ".prisma/client";
 import { Icon, Text, ListItem, Card } from '@rneui/themed';
 import ScreenWrapper from "../components/screen-wrapper";
 import { useTheme } from "@react-navigation/native";
 
 type BabyActionLogViewProps = {
-  log: BabyActionLog & {
+  log: StudentActionLog & {
     action: Action
     teacher: {
       firstName: string
@@ -112,7 +112,7 @@ function MoodForm({ babyId }: MoodFormProps) {
 
   const utils = trpc.useContext();
 
-  const { mutate } = trpc.baby.updateMood.useMutation({
+  const { mutate } = trpc.student.updateMood.useMutation({
     async onSuccess() {
       await utils.baby.byId.invalidate();
       setModalVisible(false);
@@ -245,9 +245,9 @@ function NewActionForm({ babyId, modalVisible, setModalVisible }: NewActionFormP
   });
 
   const utils = trpc.useContext();
-  const { mutate } = trpc.baby.createLog.useMutation({
+  const { mutate } = trpc.student.createLog.useMutation({
     async onSuccess() {
-      await utils.baby.byId.invalidate();
+      await utils.student.byId.invalidate();
       setModalVisible(false);
     },
   })
@@ -286,7 +286,7 @@ function NewActionForm({ babyId, modalVisible, setModalVisible }: NewActionFormP
           <Pressable
             disabled={!actionId}
             onPress={() => mutate({
-              babyId,
+              studentId: babyId,
               actionId: actionId,
               notes: text,
             })}
@@ -364,12 +364,12 @@ type BabyScreenProps = {
   route: any,
 }
 
-export function BabyScreen({ route }: BabyScreenProps) {
+export function StudentScreen({ route }: BabyScreenProps) {
   const { colors } = useTheme()
   const [modalVisible, setModalVisible] = useState(false);
-  const { babyId } = route.params;
-  const babyQuery = trpc.baby.byId.useQuery({
-    id: babyId,
+  const { studentId } = route.params;
+  const babyQuery = trpc.student.byId.useQuery({
+    id: studentId,
   });
 
   return (
@@ -423,7 +423,7 @@ export function BabyScreen({ route }: BabyScreenProps) {
               <BabyActionLogView log={item} />
             )}
           />
-          <NewActionForm babyId={babyId} modalVisible={modalVisible} setModalVisible={setModalVisible} />
+          <NewActionForm babyId={studentId} modalVisible={modalVisible} setModalVisible={setModalVisible} />
           <AddActionButton setModalVisible={setModalVisible} />
         </>
       )}

@@ -8,9 +8,9 @@ import { tokenCache } from "./utils/cache";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer, useTheme } from '@react-navigation/native';
 import { Image, useColorScheme } from "react-native";
-import { BabyScreen } from "./screens/baby";
 import { DefaultTheme, DarkTheme } from "@react-navigation/native"
 import { Icon } from "@rneui/base";
+import { StudentScreen } from "./screens/student";
 
 const Stack = createNativeStackNavigator();
 
@@ -65,8 +65,8 @@ export const App = () => {
                   }}
                 />
                 <Stack.Screen
-                  name="Baby"
-                  component={BabyScreen}
+                  name="Student"
+                  component={StudentScreen}
                   options={({ route }) => ({
                     title: route?.params?.name ?? 'Baby',
                     headerStyle: {
