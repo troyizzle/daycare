@@ -4,7 +4,7 @@
     "main": "index.ts",
     "scripts": {
         "start": "expo start",
-        "dev": "expo start --ios",
+        "dev": "expo start --tunnel",
         "clean": "rm -rf .expo .turbo node_modules",
         "android": "expo start --android",
         "ios": "expo start --ios",
@@ -16,6 +16,7 @@
         "@acme/tailwind-config": "*",
         "@clerk/clerk-expo": "^0.17.7",
         "@react-native-community/datetimepicker": "^7.4.0",
+        "@expo/ngrok": "^4.1.0",
         "@react-navigation/bottom-tabs": "^6.5.8",
         "@react-navigation/native": "^6.1.7",
         "@react-navigation/native-stack": "^6.9.13",
