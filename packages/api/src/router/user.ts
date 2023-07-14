@@ -53,6 +53,9 @@ export const userRouter = router({
         const roles = await ctx.prisma.userRole.findMany({
           where: {
             userId: user.id
+          },
+          include: {
+            role: true
           }
         })
 

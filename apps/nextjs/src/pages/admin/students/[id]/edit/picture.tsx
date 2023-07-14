@@ -6,8 +6,8 @@ import { useForm } from "react-hook-form";
 import { StudentProfilePictureInput, studentProfilePictureSchema } from "@acme/db/schema/student"
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import { FormEvent, useEffect, useRef, useState } from "react";
-import { Form, FormField, FormItem, FormLabel } from "@/components/ui/form";
+import { FormEvent, useRef, useState } from "react";
+import { Form, FormItem, FormLabel } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import AvatarEditor from "react-avatar-editor";
 import { useUploadThing } from "@/utils/uploadthing";
@@ -88,18 +88,16 @@ function AvatarForm({ studentId, profilePicture }: AvatarFormProps) {
     await form.handleSubmit(onSubmit)(event)
   }
 
-  const editingImage = image || profilePicture
-
   return (
     <Form {...form}>
       <form className="space-y-8" onSubmit={(event) => {
         event.preventDefault()
         void handleFormSubmit(event)
       }}>
-        {editingImage && (
+        {image && (
           <AvatarEditor
             ref={editor}
-            image={editingImage}
+            image={image}
             width={250}
             height={250}
             border={50}
@@ -149,6 +147,6 @@ export default function Page() {
     title="Edit Picture"
   >
     {studentQuery.isLoading && <AdminTableLoader />}
-    {studentQuery.data && <AvatarForm studentId={studentQuery.data.id} profilePicture={studentQuery.data.profilePicture} />}
+    {studentQuery.data && <AvatarForm studentId={studentQuery.data.id as string} profilePicture={''} />}
   </AdminLayout>
 }

@@ -12,7 +12,12 @@ import { DefaultTheme, DarkTheme } from "@react-navigation/native"
 import { Icon } from "@rneui/base";
 import { StudentScreen } from "./screens/student";
 
-const Stack = createNativeStackNavigator();
+export type StackParamList = {
+  Home: undefined;
+  Student: { studentId: string, name: string };
+};
+
+const Stack = createNativeStackNavigator<StackParamList>();
 
 export const App = () => {
   const scheme = useColorScheme();
@@ -68,7 +73,7 @@ export const App = () => {
                   name="Student"
                   component={StudentScreen}
                   options={({ route }) => ({
-                    title: route?.params?.name ?? 'Baby',
+                    title: route.params.name,
                     headerStyle: {
                       backgroundColor: colors.background,
                     },

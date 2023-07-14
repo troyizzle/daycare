@@ -1,27 +1,27 @@
 import React, { useState } from "react";
-import { Modal, View, StyleSheet, Pressable, Image, TextInput } from "react-native";
+import { Modal, View, StyleSheet, Pressable, TextInput, ActivityIndicator, Dimensions } from "react-native";
 import { trpc } from "../utils/trpc";
 import SelectDropdown from 'react-native-select-dropdown'
 import { FlashList } from "@shopify/flash-list";
-import { Action, StudentActionLog } from ".prisma/client";
 import { Icon, Text, ListItem, Card } from '@rneui/themed';
 import ScreenWrapper from "../components/screen-wrapper";
 import { useTheme } from "@react-navigation/native";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { StackParamList } from "../_app";
+import { Avatar } from "@rneui/base";
+import DateTimePicker from '@react-native-community/datetimepicker';
+import { StudentLogsByStudentIdResponse } from "@acme/api/src/router/student";
+import { useUser } from "@clerk/clerk-expo";
 
-type BabyActionLogViewProps = {
-  log: StudentActionLog & {
-    action: Action
-    teacher: {
-      firstName: string
-    }
-  }
+type StudentActionLogViewProps = {
+  log: StudentLogsByStudentIdResponse[number]
 }
 
-function formattedLogName(log: BabyActionLogViewProps['log']) {
+function formattedLogName(log: StudentActionLogViewProps['log']) {
   return `${log.action.name} at ${new Date(log.createdAt).toLocaleTimeString()}`
 }
 
-function BabyActionLogView({ log }: BabyActionLogViewProps) {
+function StudentActionLogView({ log }: StudentActionLogViewProps) {
   const [expanded, setExpanded] = useState(false);
   const { colors } = useTheme()
 
@@ -43,7 +43,7 @@ function BabyActionLogView({ log }: BabyActionLogViewProps) {
               color: colors.text
             }}
           >
-            {log.teacher.firstName}
+            {log.teacher?.firstName}
           </ListItem.Subtitle>
         </ListItem.Content>
       }
@@ -101,136 +101,6 @@ function AddActionButton({
   )
 }
 
-type MoodFormProps = {
-  babyId: string
-}
-
-function MoodForm({ babyId }: MoodFormProps) {
-  const [modalVisible, setModalVisible] = useState(false)
-
-  const { colors } = useTheme()
-
-  const utils = trpc.useContext();
-
-  const { mutate } = trpc.student.updateMood.useMutation({
-    async onSuccess() {
-      await utils.baby.byId.invalidate();
-      setModalVisible(false);
-    },
-  })
-
-  const [mood, setMood] = React.useState("");
-
-  return (
-    <>
-      <Icon
-        name="pencil"
-        type="font-awesome"
-        color={colors.primary}
-        style={{
-          alignItems: 'flex-end',
-        }}
-        onPress={() => {
-          setModalVisible(true)
-        }}
-      />
-
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => {
-          setModalVisible(!modalVisible);
-        }}
-      >
-        <ScreenWrapper>
-          <View style={{
-            flex: 1,
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
-            <Card>
-              <Card.Title
-                style={{
-                  color: colors.text
-                }}
-              >How is the baby's mood?</Card.Title>
-              <Card.Divider />
-              <View style={{
-                flex: 1,
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-                <SelectDropdown
-                  data={["Happy", "Sad", "Angry", "Tired", "Hungry"]}
-                  onSelect={(selectedItem, index) => {
-                    setMood(selectedItem)
-                  }}
-                  buttonTextAfterSelection={(selectedItem, index) => {
-                    return selectedItem
-                  }}
-                  rowTextForSelection={(item, index) => {
-                    return item
-                  }}
-                  buttonStyle={{
-                    backgroundColor: colors.primary,
-                    borderRadius: 10,
-                    width: '80%',
-                    height: 50,
-                  }}
-                  buttonTextStyle={{
-                    color: colors.text,
-                    fontSize: 18,
-                  }}
-                  dropdownStyle={{
-                    backgroundColor: colors.background,
-                    width: '80%',
-                    height: 300,
-                  }}
-                  rowStyle={{
-                    backgroundColor: colors.background,
-                    borderBottomColor: colors.text,
-                    borderBottomWidth: 1,
-                  }}
-                  rowTextStyle={{
-                    color: colors.text,
-                    fontSize: 18,
-                  }}
-                />
-                <Pressable
-                  style={{
-                    marginTop: 20,
-                    backgroundColor: colors.primary,
-                    borderRadius: 10,
-                    width: '80%',
-                    height: 50,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}
-                  onPress={() => {
-                    mutate({
-                      babyId,
-                      mood: mood,
-                    })
-                  }}
-                >
-                  <Text
-                    style={{
-                      color: colors.text,
-                      fontSize: 18,
-                    }}
-                  >Submit</Text>
-                </Pressable>
-              </View>
-            </Card>
-          </View>
-        </ScreenWrapper>
-      </Modal>
-    </>
-  )
-}
-
-
 type NewActionFormProps = {
   babyId: string,
   modalVisible: boolean,
@@ -247,7 +117,7 @@ function NewActionForm({ babyId, modalVisible, setModalVisible }: NewActionFormP
   const utils = trpc.useContext();
   const { mutate } = trpc.student.createLog.useMutation({
     async onSuccess() {
-      await utils.student.byId.invalidate();
+      await utils.student.logsByStudentId.invalidate();
       setModalVisible(false);
     },
   })
@@ -360,71 +230,104 @@ function NewActionForm({ babyId, modalVisible, setModalVisible }: NewActionFormP
   )
 }
 
-type BabyScreenProps = {
-  route: any,
-}
+type StudentScreenProps = NativeStackScreenProps<StackParamList, 'Student'>;
 
-export function StudentScreen({ route }: BabyScreenProps) {
+export function StudentScreen({ route }: StudentScreenProps) {
+  const { user } = useUser()
+  if (!user) throw new Error("User is not logged in")
+
   const { colors } = useTheme()
+
   const [modalVisible, setModalVisible] = useState(false);
+  const [chosenDate, setChosenDate] = useState(new Date());
+  const [canAddAction, setCanAddAction] = useState(false);
+
+  const userQuery = trpc.user.byId.useQuery({
+    id: user.id
+  })
+
+  if (userQuery.data) {
+    const roles = userQuery.data.roles.map(role => role.role.name);
+
+    if (roles.includes("admin")) {
+      setCanAddAction(true);
+      return
+    }
+
+    if (roles.includes("teacher")) {
+      if (userQuery.data.students.find((s) => s.studentId === route.params.studentId)) {
+        setCanAddAction(true);
+        return
+      }
+    }
+  }
+
   const { studentId } = route.params;
-  const babyQuery = trpc.student.byId.useQuery({
-    id: studentId,
+
+  const queryDate = new Date(
+    chosenDate.getUTCFullYear(),
+    chosenDate.getUTCMonth(),
+    chosenDate.getUTCDate(),
+  )
+
+  const studentLogQuery = trpc.student.logsByStudentId.useQuery({
+    studentId,
+    date: new Date(queryDate.getTime())
   });
 
   return (
     <ScreenWrapper>
-      {!babyQuery.data ? (
-        <Text>Loading...</Text>
-      ) : (
+      <View className="flex flex-row mt-2">
+        <Avatar
+          rounded
+          size="large"
+          source={{ uri: 'https://picsum.photos/200' }}
+        />
+        <View className="flex flex-col grow ml-4">
+          <Text
+            style={{
+              color: colors.text
+            }}
+            h1={true}>
+            {route.params.name}
+          </Text>
+          <View
+            className="flex flex-row items-center mt-2">
+            <Text
+              h4={true}
+            >
+              Viewing:
+            </Text>
+            <DateTimePicker
+              mode="date"
+              value={chosenDate}
+              onChange={(_event, selectedDate) => {
+                if (selectedDate) setChosenDate(selectedDate);
+                studentLogQuery.refetch()
+
+              }}
+              themeVariant={useTheme().dark ? "dark" : "light"}
+            />
+          </View>
+        </View>
+      </View >
+      {studentLogQuery.isLoading && <View className="mt-2"><ActivityIndicator color={colors.primary} size="large" /></View>}
+      {studentLogQuery.data && (
         <>
-          <View className="flex flex-row mt-2">
-            <View>
-              <Image
-                style={{
-                  width: 100,
-                  height: 100,
-                  borderRadius: 100,
-                }}
-                source={{
-                  uri: 'https://www.clipartmax.com/png/middle/58-589113_infant-child-happiness-boy-icon-baby-boy-avatar.png',
-                }}
-              />
-            </View>
-            <View className="flex flex-col grow ml-6">
-              <Text
-                style={{
-                  color: colors.text
-                }}
-                h1={true}>
-                {babyQuery.data?.firstName} {babyQuery.data?.lastName}
-              </Text>
-              {babyQuery.data.mood && (
-                <Text
-                  style={{
-                    color: colors.text,
-                    flexDirection: 'row',
-                    flex: 1,
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                  }}
-                >
-                  Current mood: {babyQuery.data.mood}
-                  <MoodForm babyId={babyQuery.data.id as string} />
-                </Text>
-              )}
-            </View>
-          </View >
           <FlashList
-            data={babyQuery.data?.actionLogs ?? []}
+            data={studentLogQuery.data}
             estimatedItemSize={100}
             ItemSeparatorComponent={() => <View className="border-t border-gray-500" style={{ height: 10 }} />}
             renderItem={({ item }) => (
-              <BabyActionLogView log={item} />
+              <View style={{
+                width: Dimensions.get("screen").width
+              }}>
+                <StudentActionLogView log={item} />
+              </View>
             )}
           />
           <NewActionForm babyId={studentId} modalVisible={modalVisible} setModalVisible={setModalVisible} />
-          <AddActionButton setModalVisible={setModalVisible} />
+          {canAddAction && <AddActionButton setModalVisible={setModalVisible} />}
         </>
       )}
     </ScreenWrapper >

@@ -45,6 +45,9 @@ importers:
       '@clerk/clerk-expo':
         specifier: ^0.17.7
         version: 0.17.7(@babel/core@7.19.3)(@types/react@18.0.25)(expo-auth-session@4.0.3)(expo-web-browser@12.1.1)(react-dom@18.2.0)(react-native@0.70.5)(react@18.2.0)
+      '@react-native-community/datetimepicker':
+        specifier: ^7.4.0
+        version: 7.4.0
       '@react-navigation/bottom-tabs':
         specifier: ^6.5.8
         version: 6.5.8(@react-navigation/native@6.1.7)(react-native-safe-area-context@4.4.1)(react-native-screens@3.10.2)(react-native@0.70.5)(react@18.2.0)
@@ -3773,6 +3776,12 @@ packages:
       - encoding
       - supports-color
       - utf-8-validate
+    dev: false
+
+  /@react-native-community/datetimepicker@7.4.0:
+    resolution: {integrity: sha512-+570921Ho0GwExpw4p3fGJRFZE3dcCWVLaxuVfEkoyvm3S4Fa69waeKFYuBhPkXEAK/WiusLDIgt9yuDvcGajw==}
+    dependencies:
+      invariant: 2.2.4
     dev: false
 
   /@react-native/assets@1.0.0:

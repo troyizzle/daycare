@@ -15,6 +15,7 @@
         "@acme/api": "*",
         "@acme/tailwind-config": "*",
         "@clerk/clerk-expo": "^0.17.7",
+        "@react-native-community/datetimepicker": "^7.4.0",
         "@react-navigation/bottom-tabs": "^6.5.8",
         "@react-navigation/native": "^6.1.7",
         "@react-navigation/native-stack": "^6.9.13",

@@ -1,7 +1,11 @@
 import { router, publicProcedure, protectedProcedure } from "../trpc";
 import { z } from "zod";
 import { clerkClient } from "@clerk/nextjs"
-import { studentProfilePictureSchema, studentUpdateSchema} from "@acme/db/schema/student"
+import { studentProfilePictureSchema } from "@acme/db/schema/student"
+import { inferProcedureOutput } from "@trpc/server";
+import { AppRouter } from ".";
+
+export type StudentLogsByStudentIdResponse = inferProcedureOutput<AppRouter["student"]["logsByStudentId"]>;
 
 export const studentRouter = router({
   all: publicProcedure.query(({ ctx }) => {
@@ -12,79 +16,85 @@ export const studentRouter = router({
       id: z.string(),
     })
   )
-  .query(async ({ ctx, input }) => {
-    const data = await ctx.prisma.student.findUnique({
+    .query(({ ctx, input }) => {
+      return ctx.prisma.student.findUnique({
+        where: {
+          id: input.id
+        },
+      })
+    }),
+  logsByStudentId: protectedProcedure.input(
+    z.object({
+      studentId: z.string(),
+      date: z.date()
+    })
+  ).query(async ({ ctx, input }) => {
+    const data = await ctx.prisma.studentActionLog.findMany({
       where: {
-        id: input.id
-      },
-      include: {
-        actionLogs: {
-          include: {
-            action: true
-          },
-          orderBy: {
-            createdAt: 'desc'
-          }
+        studentId: input.studentId,
+        createdAt: {
+          gte: input.date,
         }
       },
+      include: {
+        action: true
+      },
+      orderBy: {
+        createdAt: 'desc'
+      }
     })
 
-    const teacherIds = data?.actionLogs.map(log => log.teacherId)
-    if (!teacherIds || teacherIds?.length === 0) {
-      return data
-    }
+    const teacherIds = data?.map(log => log.teacherId)
 
     const users = await clerkClient.users.getUserList({
       userId: teacherIds
     })
 
-    return {
-      ...data,
-      actionLogs: data?.actionLogs.map(log => ({
+    return data.map(log => ({
         ...log,
         teacher: users.find(user => user.id === log.teacherId)
       }))
-    }
+
   }),
   updateProfilePicture: protectedProcedure
-  .input(studentProfilePictureSchema)
-  .mutation(({ ctx, input }) => {
-    const { id, ...data } = input
+    .input(studentProfilePictureSchema)
+    .mutation(({ ctx, input }) => {
+      const { id, ...data } = input
 
-    return ctx.prisma.student.update({
-      where: {
-        id
-      },
-      data
-    })
-  }),
+      return ctx.prisma.student.update({
+        where: {
+          id
+        },
+        data
+      })
+    }),
   updateMood: protectedProcedure
-  .input(z.object({
-    babyId: z.string(),
-    mood: z.string()
-  }))
-  .mutation(({ ctx, input }) => {
-    return ctx.prisma.student.update({
-      where: {
-        id: input.babyId
-      },
-      data: {
-        mood: input.mood
-      }
-    })
-  }),
+    .input(z.object({
+      babyId: z.string(),
+      mood: z.string()
+    }))
+    .mutation(({ ctx, input }) => {
+      return ctx.prisma.student.update({
+        where: {
+          id: input.babyId
+        },
+        data: {
+          mood: input.mood
+        }
+      })
+    }),
   createLog: protectedProcedure
-  .input(z.object({
-    studentId: z.string(),
-    actionId: z.string(),
-    notes: z.string(),
-  }))
-  .mutation(({ ctx, input }) => {
-    return ctx.prisma.studentActionLog.create({
-      data: {
-        ...input,
-        teacherId: ctx.auth.userId
-      }
-    })
-  }),
+    .input(z.object({
+      studentId: z.string(),
+      actionId: z.string(),
+      notes: z.string(),
+    }))
+    .mutation(({ ctx, input }) => {
+      return ctx.prisma.studentActionLog.create({
+        data: {
+          ...input,
+          teacherId: ctx.auth.userId
+        }
+      })
+    }),
 });
