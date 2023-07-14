@@ -7,11 +7,14 @@ import { Icon, Text, ListItem, Card } from '@rneui/themed';
 import ScreenWrapper from "../components/screen-wrapper";
 import { useTheme } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { StackParamList } from "../_app";
 import { Avatar } from "@rneui/base";
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { StudentLogsByStudentIdResponse } from "@acme/api/src/router/student";
 import { useUser } from "@clerk/clerk-expo";
+import { UserResource } from "@clerk/types";
+import { DefaultStackParamList } from "../contexts/StackProvider";
+
+type User = NonNullable<UserResource>
 
 type StudentActionLogViewProps = {
   log: StudentLogsByStudentIdResponse[number]
@@ -230,12 +233,10 @@ function NewActionForm({ babyId, modalVisible, setModalVisible }: NewActionFormP
   )
 }
 
-type StudentScreenProps = NativeStackScreenProps<StackParamList, 'Student'>;
+type StudentScreenProps = NativeStackScreenProps<DefaultStackParamList, 'Student'>
 
-export function StudentScreen({ route }: StudentScreenProps) {
-  const { user } = useUser()
-  if (!user) throw new Error("User is not logged in")
-
+export function StudentScreen({ route, navigation }: StudentScreenProps) {
+  const user = useUser().user as User;
   const { colors } = useTheme()
 
   const [modalVisible, setModalVisible] = useState(false);
@@ -243,7 +244,9 @@ export function StudentScreen({ route }: StudentScreenProps) {
   const [canAddAction, setCanAddAction] = useState(false);
 
   const userQuery = trpc.user.byId.useQuery({
-    id: user.id
+    id: user?.id
+  }, {
+    enabled: !!user,
   })
 
   if (userQuery.data) {
@@ -251,13 +254,11 @@ export function StudentScreen({ route }: StudentScreenProps) {
 
     if (roles.includes("admin")) {
       setCanAddAction(true);
-      return
     }
 
     if (roles.includes("teacher")) {
       if (userQuery.data.students.find((s) => s.studentId === route.params.studentId)) {
         setCanAddAction(true);
-        return
       }
     }
   }

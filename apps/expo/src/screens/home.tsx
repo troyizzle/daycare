@@ -154,6 +154,11 @@ export const HomeScreen = ({ navigation }: HomeScreenProps) => {
         </View>
         }
 
+        {userQuery.error && <View className="min-h-screen justify-center items-center">
+          <Text className="text-sky-50">Error</Text>
+        </View>
+        }
+
         {userQuery.data && <StudentDisplay user={userQuery.data} navigation={navigation} />}
       </View>
     </ScreenWrapper>
