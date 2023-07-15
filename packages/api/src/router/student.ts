@@ -1,10 +1,11 @@
 import { router, publicProcedure, protectedProcedure } from "../trpc";
 import { z } from "zod";
 import { clerkClient } from "@clerk/nextjs"
-import { studentProfilePictureSchema } from "@acme/db/schema/student"
+import { studentProfilePictureSchema, studentUpdateSchema } from "@acme/db/schema/student"
 import { inferProcedureOutput } from "@trpc/server";
 import { AppRouter } from ".";
 
+export type StudentAllResponse = inferProcedureOutput<AppRouter["student"]["all"]>;
 export type StudentLogsByStudentIdResponse = inferProcedureOutput<AppRouter["student"]["logsByStudentId"]>;
 
 export const studentRouter = router({
@@ -56,6 +57,18 @@ export const studentRouter = router({
       }))
 
   }),
+  update: protectedProcedure
+    .input(studentUpdateSchema)
+    .mutation(({ ctx, input }) => {
+      const { id, ...data } = input
+
+      return ctx.prisma.student.update({
+        where: {
+          id
+        },
+        data
+      })
+    }),
   updateProfilePicture: protectedProcedure
     .input(studentProfilePictureSchema)
     .mutation(({ ctx, input }) => {

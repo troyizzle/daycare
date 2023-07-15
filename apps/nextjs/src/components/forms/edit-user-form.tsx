@@ -11,14 +11,10 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { Input } from "../ui/input"
 
 type EditUserForm = {
-  user: UserByIdResponse
+  user: NonNullable<UserByIdResponse>
 }
 
 export default function EditUserForm({ user }: EditUserForm) {
-  if (!user) {
-    throw new Error("User not found") // This shouldn't ever happen
-  }
-
   const router = useRouter()
   const roleQuery = trpc.role.all.useQuery()
   const studentQuery = trpc.student.all.useQuery()
