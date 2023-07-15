@@ -12,6 +12,9 @@ export const studentUpdateSchema = z.object({
   firstName: z.string(),
   lastName: z.string(),
   profilePicture: z.string().nullable(),
+  dob: z.date({
+    required_error: "Date of birth is required"
+  })
 })
 
 export type StudentUpdateInput = z.infer<typeof studentUpdateSchema>
