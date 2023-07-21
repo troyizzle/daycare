@@ -4,11 +4,12 @@ import { StudentAllResponse } from "@acme/api/src/router/student"
 import { StudentUpdateInput } from "@acme/db/schema/student"
 import { format } from "date-fns"
 import { SetStateAction } from "react"
-import { useForm } from "react-hook-form"
+import { useFieldArray, useForm } from "react-hook-form"
 import { toast } from "sonner"
 import { Icons } from "../icons"
 import { Button } from "../ui/button"
 import { Calendar } from "../ui/calendar"
+import { DialogFooter } from "../ui/dialog"
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "../ui/form"
 import { Input } from "../ui/input"
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover"
@@ -16,15 +17,24 @@ import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover"
 type EditStudentForm = {
   student: NonNullable<StudentAllResponse[number]>
   setModalVisible: React.Dispatch<SetStateAction<boolean>>
-  children: React.ReactNode
 }
 
-export default function EditStudentForm({ student, setModalVisible, children }: EditStudentForm) {
+export default function EditStudentForm({ student, setModalVisible }: EditStudentForm) {
+  const contactInfoQuery = trpc.contactInformation.allByStudentId.useQuery({
+    studentId: student.id
+  })
+
   const form = useForm<StudentUpdateInput>({
     defaultValues: {
       ...student,
-      dob: student.dob ?? new Date()
+      dob: student.dob ?? new Date(),
+      ContactInformation: contactInfoQuery.data ?? []
     }
+  })
+
+  const { fields: contactInfoFields, insert } = useFieldArray({
+    control: form.control,
+    name: "ContactInformation"
   })
 
   const context = trpc.useContext()
@@ -133,7 +143,94 @@ export default function EditStudentForm({ student, setModalVisible, children }: 
           )}
         />
 
-        {children}
+        <div>
+          <div className="flex items-center justify-between">
+            <h4>Emergency Contact Info</h4>
+            <Button
+              type="button"
+              variant="ghost"
+              onClick={() => {
+                insert(contactInfoFields.length + 1, {
+                  firstName: "",
+                  lastName: "",
+                  email: "",
+                  phone: "",
+                  studentId: student.id
+                })
+              }}
+            >
+              <span className="text-sm">Add</span>
+            </Button>
+          </div>
+          {contactInfoFields.map((field, index) => (
+            <div key={field.id}>
+              <FormField
+                control={form.control}
+                name={`ContactInformation.${index}.firstName`}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>First Name</FormLabel>
+                    <FormControl>
+                      <Input {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name={`ContactInformation.${index}.lastName`}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Last Name</FormLabel>
+                    <FormControl>
+                      <Input {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name={`ContactInformation.${index}.email`}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email</FormLabel>
+                    <FormControl>
+                      <Input {...field} type="email" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name={`ContactInformation.${index}.phone`}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Phone</FormLabel>
+                    <FormControl>
+                      <Input {...field} type="tel" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <input type="hidden" {...form.register(`ContactInformation.${index}.studentId`)} />
+            </div>
+          ))}
+        </div>
+
+        <DialogFooter>
+          <Button
+            variant="default"
+            type="submit"
+          >Update</Button>
+        </DialogFooter>
       </form>
     </Form>
   )

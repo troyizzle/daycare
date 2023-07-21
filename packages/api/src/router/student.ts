@@ -1,7 +1,7 @@
 import { router, publicProcedure, protectedProcedure } from "../trpc";
 import { z } from "zod";
 import { clerkClient } from "@clerk/nextjs"
-import { studentProfilePictureSchema, studentUpdateSchema } from "@acme/db/schema/student"
+import { studentNewSchema, studentProfilePictureSchema, studentUpdateSchema } from "@acme/db/schema/student"
 import { inferProcedureOutput } from "@trpc/server";
 import { AppRouter } from ".";
 
@@ -11,6 +11,13 @@ export type StudentLogsByStudentIdResponse = inferProcedureOutput<AppRouter["stu
 export const studentRouter = router({
   all: publicProcedure.query(({ ctx }) => {
     return ctx.prisma.student.findMany();
+  }),
+  create: protectedProcedure.input(
+    studentNewSchema
+  ).mutation(({ ctx, input }) => {
+    return ctx.prisma.student.create({
+      data: input
+    })
   }),
   byId: protectedProcedure.input(
     z.object({
@@ -52,21 +59,29 @@ export const studentRouter = router({
     })
 
     return data.map(log => ({
-        ...log,
-        teacher: users.find(user => user.id === log.teacherId)
-      }))
+      ...log,
+      teacher: users.find(user => user.id === log.teacherId)
+    }))
 
   }),
   update: protectedProcedure
     .input(studentUpdateSchema)
     .mutation(({ ctx, input }) => {
-      const { id, ...data } = input
+      const { id, ContactInformation, ...data } = input
 
       return ctx.prisma.student.update({
         where: {
           id
         },
-        data
+        data: {
+          ...data,
+          ContactInformation: {
+            deleteMany: {},
+            createMany: {
+              data: ContactInformation ?? []
+            }
+          }
+        }
       })
     }),
   updateProfilePicture: protectedProcedure

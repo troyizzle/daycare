@@ -43,15 +43,16 @@ model ClassroomStudents {
 }
 
 model Student {
-  id             String              @id @default(cuid())
-  firstName      String
-  lastName       String
-  dob            DateTime
-  mood           String?
-  actionLogs     StudentActionLog[]
-  classrooms     ClassroomStudents[]
-  ParentStudent  ParentStudent[]
-  profilePicture String?
+  id                 String               @id @default(cuid())
+  firstName          String
+  lastName           String
+  dob                DateTime
+  mood               String?
+  actionLogs         StudentActionLog[]
+  classrooms         ClassroomStudents[]
+  ParentStudent      ParentStudent[]
+  profilePicture     String?
+  ContactInformation ContactInformation[]
 }
 
 model ParentStudent {
@@ -95,4 +96,16 @@ model UserRole {
   roleId String
 
   @@unique([userId, roleId])
+}
+
+model ContactInformation {
+  id        String   @id @default(cuid())
+  firstName String
+  lastName  String
+  phone     String
+  email     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  studentId String
+  student   Student  @relation(fields: [studentId], references: [id])
 }

@@ -75,11 +75,7 @@ export function getColumnDefs(modalVisible: boolean, setModalVisible:
               <DialogHeader>
                 <DialogTitle>Edit {student.firstName} {student.lastName}</DialogTitle>
               </DialogHeader>
-              <EditStudentForm student={student} setModalVisible={setModalVisible}>
-                <DialogFooter>
-                  <Button variant="default" type="submit">Update</Button>
-                </DialogFooter>
-              </EditStudentForm>
+              <EditStudentForm student={student} setModalVisible={setModalVisible} />
             </DialogContent>
           </Dialog>
         )
