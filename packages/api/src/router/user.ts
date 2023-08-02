@@ -3,7 +3,7 @@ import { clerkClient } from "@clerk/nextjs"
 import { z } from "zod";
 import { isClerkAPIResponseError } from "@clerk/nextjs"
 import { inferProcedureOutput, TRPCError } from "@trpc/server";
-import { userUpdateSchema } from "../../../db/schema/user"
+import { userCreateSchema, userUpdateSchema } from "../../../db/schema/user"
 import { AppRouter } from ".";
 
 export type UserAllResponse = inferProcedureOutput<AppRouter['user']['all']>
@@ -102,6 +102,24 @@ export const userRouter = router({
               message: 'User not found',
             })
           }
+        }
+      }
+    }),
+  create: protectedProcedure
+    .input(userCreateSchema)
+    .mutation(async ({ ctx, input }) => {
+      try {
+        const user = await clerkClient.users.createUser({
+          firstName: input.firstName,
+          lastName: input.lastName,
+          emailAddress: [input.email],
+          phoneNumber: [input.phoneNumber],
+        })
+
+        return user
+      } catch (e) {
+        if (isClerkAPIResponseError(e)) {
+          console.log(e)
         }
       }
     }),

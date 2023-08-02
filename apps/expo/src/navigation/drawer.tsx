@@ -1,12 +1,13 @@
 import { useUser } from '@clerk/clerk-expo';
-import { createDrawerNavigator, DrawerScreenProps } from '@react-navigation/drawer';
-import { Icon } from '@rneui/themed';
+import { createDrawerNavigator } from '@react-navigation/drawer';
 import UserDrawer from '../components/user-drawer';
 import { HomeScreen } from '../screens/home';
 
-const Drawer = createDrawerNavigator();
+type DrawerStackParamList = {
+  Home: undefined;
+}
 
-export type DrawerStackProps = DrawerScreenProps<DrawerStack>
+const Drawer = createDrawerNavigator<DrawerStackParamList>();
 
 export default function DrawerStack() {
   const { user } = useUser();
@@ -17,15 +18,13 @@ export default function DrawerStack() {
 
   return (
     <Drawer.Navigator
-      drawerContent={props => <UserDrawer {...props} user={user} />}
-      initialRouteName="Home">
-      <Drawer.Screen name="Home" component={HomeScreen}
-      options={{
-        drawerIcon: ({ focused, size }) => (
-          <Icon name="home" size={size} color={focused ? 'primary' : 'muted'} />
-        ),
-      }}
-      />
+      useLegacyImplementation
+      initialRouteName="Home"
+      drawerContent={props => <UserDrawer {...props} />}
+    >
+      <Drawer.Screen name="Home" component={HomeScreen} options={{
+        headerTitle: '',
+      }} />
     </Drawer.Navigator>
   )
 }

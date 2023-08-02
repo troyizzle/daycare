@@ -5,6 +5,7 @@ import { HomeScreen } from "../screens/home";
 import { Avatar, Icon } from "@rneui/base";
 import { StudentScreen } from "../screens/student";
 import { UserResource } from "@clerk/types";
+import DrawerStack from "../navigation/drawer";
 
 export type DefaultStackParamList = {
   Home: undefined;
@@ -20,35 +21,12 @@ export default function DefaultStackProvider() {
 
   const { colors } = useTheme()
 
-  return (<DefaultStack.Navigator initialRouteName="Home">
+  return (<DefaultStack.Navigator>
     <DefaultStack.Screen
-      name="Home"
-      component={HomeScreen}
+      name="Test"
+      component={DrawerStack}
       options={{
-        headerStyle: {
-          backgroundColor: colors.background
-        },
-        headerTintColor: colors.background,
-        headerTitleStyle: {
-          fontWeight: 'bold',
-        },
-        headerTitle: '',
-        headerLeft: () => {
-          return <Icon
-            name='menu'
-            color={colors.text}
-            size={32}
-            onPress={() => console.log('pressed')}
-          />
-        },
-        headerRight: () => {
-          return (
-            <Avatar
-              rounded
-              source={{ uri: user.profileImageUrl }}
-            />
-          )
-        },
+        headerShown: false
       }}
     />
 
