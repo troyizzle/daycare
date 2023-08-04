@@ -1,7 +1,7 @@
 import { router, publicProcedure, protectedProcedure } from "../trpc";
 import { z } from "zod";
 import { clerkClient } from "@clerk/nextjs"
-import { studentNewSchema, studentProfilePictureSchema, studentUpdateSchema } from "@acme/db/schema/student"
+import { studentProfilePictureSchema, studentUpdateSchema } from "@acme/db/schema/student"
 import { inferProcedureOutput } from "@trpc/server";
 import { AppRouter } from ".";
 
@@ -11,13 +11,6 @@ export type StudentLogsByStudentIdResponse = inferProcedureOutput<AppRouter["stu
 export const studentRouter = router({
   all: publicProcedure.query(({ ctx }) => {
     return ctx.prisma.student.findMany();
-  }),
-  create: protectedProcedure.input(
-    studentNewSchema
-  ).mutation(({ ctx, input }) => {
-    return ctx.prisma.student.create({
-      data: input
-    })
   }),
   byId: protectedProcedure.input(
     z.object({
@@ -96,21 +89,6 @@ export const studentRouter = router({
         data
       })
     }),
-  updateMood: protectedProcedure
-    .input(z.object({
-      babyId: z.string(),
-      mood: z.string()
-    }))
-    .mutation(({ ctx, input }) => {
-      return ctx.prisma.student.update({
-        where: {
-          id: input.babyId
-        },
-        data: {
-          mood: input.mood
-        }
-      })
-    }),
   createLog: protectedProcedure
     .input(z.object({
       studentId: z.string(),
@@ -125,4 +103,17 @@ export const studentRouter = router({
         }
       })
     }),
+  byIdProfile: protectedProcedure
+    .input(z.object({
+      studentId: z.string()
+    }))
+    .query(({ ctx, input }) => {
+      return ctx.prisma.student.findUnique({
+        where: {
+          id: input.studentId
+        },
+        include: {
+        }
+      })
+    })
 });

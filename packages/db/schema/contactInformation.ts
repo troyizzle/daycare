@@ -12,10 +12,7 @@ export const contactInformationNewSchema = z.object({
   }),
   email: z.string({
     required_error: "Email is required"
-  }),
-  studentId: z.string({
-    required_error: "Student ID is required"
-  }),
+  })
 })
 
 export type ContactInformationNewInput = z.infer<typeof contactInformationNewSchema>

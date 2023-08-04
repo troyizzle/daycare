@@ -107,5 +107,5 @@ model ContactInformation {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   studentId String
-  student   Student  @relation(fields: [studentId], references: [id])
+  Student   Student  @relation(fields: [studentId], references: [id])
 }

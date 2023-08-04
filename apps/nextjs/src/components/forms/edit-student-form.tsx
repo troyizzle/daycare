@@ -3,7 +3,8 @@ import { trpc } from "@/utils/trpc"
 import { StudentAllResponse } from "@acme/api/src/router/student"
 import { StudentUpdateInput } from "@acme/db/schema/student"
 import { format } from "date-fns"
-import { SetStateAction } from "react"
+import { Loader, Loader2 } from "lucide-react"
+import { SetStateAction, useEffect } from "react"
 import { useFieldArray, useForm } from "react-hook-form"
 import { toast } from "sonner"
 import { Icons } from "../icons"
@@ -16,10 +17,11 @@ import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover"
 
 type EditStudentForm = {
   student: NonNullable<StudentAllResponse[number]>
+  modalVisible: boolean
   setModalVisible: React.Dispatch<SetStateAction<boolean>>
 }
 
-export default function EditStudentForm({ student, setModalVisible }: EditStudentForm) {
+export default function EditStudentForm({ student, modalVisible, setModalVisible }: EditStudentForm) {
   const contactInfoQuery = trpc.contactInformation.allByStudentId.useQuery({
     studentId: student.id
   })
@@ -32,7 +34,7 @@ export default function EditStudentForm({ student, setModalVisible }: EditStuden
     }
   })
 
-  const { fields: contactInfoFields, insert } = useFieldArray({
+  const { fields: contactInfoFields, insert, replace } = useFieldArray({
     control: form.control,
     name: "ContactInformation"
   })
@@ -48,6 +50,7 @@ export default function EditStudentForm({ student, setModalVisible }: EditStuden
     },
     onError: (error) => {
       console.log(error)
+      toast.error(error.message)
     }
   })
 
@@ -58,6 +61,12 @@ export default function EditStudentForm({ student, setModalVisible }: EditStuden
   const handleFormSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     await form.handleSubmit(onSubmit)(event)
   }
+
+  useEffect(() => {
+    if (contactInfoQuery.data) {
+      replace(contactInfoQuery.data)
+    }
+  }, [contactInfoQuery.data])
 
   return (
     <Form {...form}>
@@ -154,14 +163,18 @@ export default function EditStudentForm({ student, setModalVisible }: EditStuden
                   firstName: "",
                   lastName: "",
                   email: "",
-                  phone: "",
-                  studentId: student.id
+                  phone: ""
                 })
               }}
             >
               <span className="text-sm">Add</span>
             </Button>
           </div>
+          {contactInfoQuery.isLoading && (
+            <div className="flex justify-center">
+              <Loader2 className="w-6 h-6 text-blue-500 animate-spin" />
+            </div>
+          )}
           {contactInfoFields.map((field, index) => (
             <div key={field.id}>
               <FormField
@@ -219,8 +232,6 @@ export default function EditStudentForm({ student, setModalVisible }: EditStuden
                   </FormItem>
                 )}
               />
-
-              <input type="hidden" {...form.register(`ContactInformation.${index}.studentId`)} />
             </div>
           ))}
         </div>
