@@ -33,7 +33,7 @@ export default function AdminModalForm<T extends FieldValues>({
   }
 
   return (
-    <Dialog open={open}>
+    <Dialog open={open} onOpenChange={setIsOpen}>
       <Button
         onClick={() => setIsOpen(true)}
         variant="default">

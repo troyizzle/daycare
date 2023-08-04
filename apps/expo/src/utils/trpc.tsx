@@ -36,7 +36,15 @@ export const TRPCProvider: React.FC<{
   children: React.ReactNode;
 }> = ({ children }) => {
   const { getToken } = useAuth();
-  const [queryClient] = React.useState(() => new QueryClient());
+  const [queryClient] = React.useState(() => new QueryClient({
+    defaultOptions: {
+      queries: {
+        refetchOnWindowFocus: false,
+        refetchOnMount: false,
+        refetchOnReconnect: false,
+      }
+    }
+  }));
   const [trpcClient] = React.useState(() =>
     trpc.createClient({
       transformer,

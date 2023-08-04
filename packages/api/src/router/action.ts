@@ -5,7 +5,6 @@ const actionCreateSchema = z.object({
   name: z.string().min(1).max(40)
 })
 
-
 export const actionRouter = router({
   all: publicProcedure.query(({ ctx }) => {
     return ctx.prisma.action.findMany();

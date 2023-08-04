@@ -52,21 +52,29 @@ export const studentRouter = router({
     })
 
     return data.map(log => ({
-        ...log,
-        teacher: users.find(user => user.id === log.teacherId)
-      }))
+      ...log,
+      teacher: users.find(user => user.id === log.teacherId)
+    }))
 
   }),
   update: protectedProcedure
     .input(studentUpdateSchema)
     .mutation(({ ctx, input }) => {
-      const { id, ...data } = input
+      const { id, ContactInformation, ...data } = input
 
       return ctx.prisma.student.update({
         where: {
           id
         },
-        data
+        data: {
+          ...data,
+          ContactInformation: {
+            deleteMany: {},
+            createMany: {
+              data: ContactInformation ?? []
+            }
+          }
+        }
       })
     }),
   updateProfilePicture: protectedProcedure
@@ -79,21 +87,6 @@ export const studentRouter = router({
           id
         },
         data
-      })
-    }),
-  updateMood: protectedProcedure
-    .input(z.object({
-      babyId: z.string(),
-      mood: z.string()
-    }))
-    .mutation(({ ctx, input }) => {
-      return ctx.prisma.student.update({
-        where: {
-          id: input.babyId
-        },
-        data: {
-          mood: input.mood
-        }
       })
     }),
   createLog: protectedProcedure
@@ -110,4 +103,17 @@ export const studentRouter = router({
         }
       })
     }),
+  byIdProfile: protectedProcedure
+    .input(z.object({
+      studentId: z.string()
+    }))
+    .query(({ ctx, input }) => {
+      return ctx.prisma.student.findUnique({
+        where: {
+          id: input.studentId
+        },
+        include: {
+        }
+      })
+    })
 });

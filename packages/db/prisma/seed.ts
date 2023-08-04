@@ -84,6 +84,14 @@ async function main() {
           create: {
             classroomId: student.classroom
           }
+        },
+        ContactInformation: {
+          create: {
+            firstName: `mom - ${student.firstName}`,
+            lastName: `mom - ${student.lastName}`,
+            email: `${student.firstName}@email`,
+            phone: '1234567890',
+          }
         }
       }
     })

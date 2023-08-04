@@ -4,11 +4,13 @@ import { userRouter } from "./user";
 import { roleRouter } from "./role";
 import { classroomRouter } from "./classroom";
 import { studentRouter } from "./student";
+import { contactInformationRouter } from "./contactInformation";
 
 export const appRouter = router({
   action: actionRouter,
   student: studentRouter,
   classroom: classroomRouter,
+  contactInformation: contactInformationRouter,
   role: roleRouter,
   user: userRouter
 });
