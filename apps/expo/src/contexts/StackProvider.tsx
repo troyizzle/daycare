@@ -1,79 +1,50 @@
-import { useUser } from "@clerk/clerk-expo";
 import { useTheme } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { HomeScreen } from "../screens/home";
-import { Avatar, Icon } from "@rneui/base";
 import { StudentScreen } from "../screens/student";
-import { UserResource } from "@clerk/types";
+import DrawerStack from "../navigation/drawer";
+import { Pressable, Text } from "react-native";
+import { StudentProfile } from "../screens/student-profile";
 
 export type DefaultStackParamList = {
-  Home: undefined;
+  HomeScreen: undefined;
   Student: { studentId: string, name: string };
+  StudentProfile: { studentId: string };
 };
 
 const DefaultStack = createNativeStackNavigator<DefaultStackParamList>();
 
-type User = NonNullable<UserResource>
-
 export default function DefaultStackProvider() {
-  const user =  useUser().user as User
-
   const { colors } = useTheme()
 
-  return (<DefaultStack.Navigator initialRouteName="Home">
+  return (<DefaultStack.Navigator>
     <DefaultStack.Screen
-      name="Home"
-      component={HomeScreen}
+      name="HomeScreen"
+      component={DrawerStack}
       options={{
-        headerStyle: {
-          backgroundColor: colors.background
-        },
-        headerTintColor: colors.background,
-        headerTitleStyle: {
-          fontWeight: 'bold',
-        },
-        headerTitle: '',
-        headerLeft: () => {
-          return <Icon
-            name='menu'
-            color={colors.text}
-            size={32}
-            onPress={() => console.log('pressed')}
-          />
-        },
-        headerRight: () => {
-          return (
-            <Avatar
-              rounded
-              source={{ uri: user.profileImageUrl }}
-            />
-          )
-        },
+        headerShown: false
       }}
     />
 
     <DefaultStack.Screen
       name="Student"
       component={StudentScreen}
-      options={({ route }) => ({
-        title: route.params.name,
-        headerStyle: {
-          backgroundColor: colors.background,
-        },
-        headerRight: () => {
-          return <Icon
-            name='menu'
-            color={colors.text}
-            size={32}
-            onPress={() => console.log('pressed')}
-          />
-        },
-        headerTintColor: colors.text,
-        headerTitleStyle: {
-          fontWeight: 'bold',
-          color: colors.text
-        }
+      options={({ navigation, route }) => ({
+        headerTitle: () => (
+          <Pressable onPress={() => navigation.navigate("StudentProfile", {
+            studentId: route.params.studentId
+          })}>
+            <Text style={{ color: colors.primary }}>{route.params.name}</Text>
+          </Pressable>
+        ),
       })}
+    />
+
+    <DefaultStack.Screen
+      name="StudentProfile"
+      component={StudentProfile}
+      options={{
+        title: "Contact Info"
+      }}
     />
   </DefaultStack.Navigator>
   )
