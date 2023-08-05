@@ -3,7 +3,7 @@ import { trpc } from "@/utils/trpc"
 import { StudentAllResponse } from "@acme/api/src/router/student"
 import { StudentUpdateInput } from "@acme/db/schema/student"
 import { format } from "date-fns"
-import { Loader, Loader2 } from "lucide-react"
+import { Loader2 } from "lucide-react"
 import { SetStateAction, useEffect } from "react"
 import { useFieldArray, useForm } from "react-hook-form"
 import { toast } from "sonner"
@@ -163,7 +163,8 @@ export default function EditStudentForm({ student, modalVisible, setModalVisible
                   firstName: "",
                   lastName: "",
                   email: "",
-                  phone: ""
+                  phone: "",
+                  relationship: ""
                 })
               }}
             >
@@ -197,6 +198,20 @@ export default function EditStudentForm({ student, modalVisible, setModalVisible
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Last Name</FormLabel>
+                    <FormControl>
+                      <Input {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name={`ContactInformation.${index}.relationship`}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Relationship</FormLabel>
                     <FormControl>
                       <Input {...field} />
                     </FormControl>

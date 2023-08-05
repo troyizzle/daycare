@@ -12,7 +12,10 @@ export const contactInformationNewSchema = z.object({
   }),
   email: z.string({
     required_error: "Email is required"
-  })
+  }),
+  relationship: z.string({
+    required_error: "Relationship is required"
+  }),
 })
 
 export type ContactInformationNewInput = z.infer<typeof contactInformationNewSchema>
