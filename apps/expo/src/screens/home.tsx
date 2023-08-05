@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ActivityIndicator, Dimensions, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, Dimensions, RefreshControl, ScrollView, TouchableOpacity, View } from "react-native";
 import { FlashList } from "@shopify/flash-list";
 import { trpc } from "../utils/trpc";
 import ScreenWrapper from "../components/screen-wrapper";
@@ -148,19 +148,29 @@ export const HomeScreen = ({ navigation }: HomeScreenProps) => {
 
   return (
     <ScreenWrapper>
-      <View className="h-full w-full">
-        {userQuery.isLoading && <View className="min-h-screen justify-center items-center">
-          <ActivityIndicator size="large" color={useTheme().colors.primary} />
-        </View>
+      <ScrollView
+      className="h-full w-full"
+        refreshControl={
+          <RefreshControl
+            refreshing={userQuery.isFetching}
+            onRefresh={() => userQuery.refetch()}
+          />
         }
+      >
+        <View className="h-full w-full">
+          {userQuery.isLoading && <View className="min-h-screen justify-center items-center">
+            <ActivityIndicator size="large" color={useTheme().colors.primary} />
+          </View>
+          }
 
-        {userQuery.error && <View className="min-h-screen justify-center items-center">
-          <Text className="text-sky-50">Error</Text>
+          {userQuery.error && <View className="min-h-screen justify-center items-center">
+            <Text className="text-sky-50">Error</Text>
+          </View>
+          }
+
+          {userQuery.data && <StudentDisplay user={userQuery.data} navigation={navigation} />}
         </View>
-        }
-
-        {userQuery.data && <StudentDisplay user={userQuery.data} navigation={navigation} />}
-      </View>
-    </ScreenWrapper>
+      </ScrollView>
+    </ScreenWrapper >
   );
 };
