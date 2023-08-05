@@ -70,7 +70,7 @@ export const columns: ColumnDef<Student>[] = [
               </Link>
             </DropdownMenuContent>
           </DropdownMenu>
-          <DialogContent>
+          <DialogContent className="overflow-y-scroll max-h-screen">
             <DialogHeader>
               <DialogTitle>Edit {student.firstName} {student.lastName}</DialogTitle>
             </DialogHeader>
