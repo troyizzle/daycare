@@ -1,5 +1,4 @@
 import { useAuth, useUser } from "@clerk/clerk-expo";
-import { Icon } from "@rneui/base";
 import { Pressable, SafeAreaView, Text, View } from "react-native";
 
 function SignOutButton() {
@@ -11,14 +10,13 @@ function SignOutButton() {
 
   return (
     <Pressable
-      className="bg-blue-500 rounded p-4"
+      className="bg-gray-300 rounded-full p-4"
       onPress={() => {
         signOut();
       }}
     >
       <View className="flex items-center">
-        <Text className="text-white font-bold">
-        <Icon name="sign-out" type="font-awesome" size={20} />
+        <Text className="font-bold">
           Sign Out
         </Text>
       </View>

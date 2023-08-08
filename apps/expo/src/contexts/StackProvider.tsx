@@ -7,7 +7,7 @@ import { StudentProfile } from "../screens/student-profile";
 
 export type DefaultStackParamList = {
   HomeScreen: undefined;
-  Student: { studentId: string, name: string };
+  Student: { studentId: string, name: string, profilePicture: string | null };
   StudentProfile: { studentId: string };
 };
 

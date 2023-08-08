@@ -3,65 +3,44 @@ import { ActivityIndicator, Dimensions, RefreshControl, ScrollView, TouchableOpa
 import { FlashList } from "@shopify/flash-list";
 import { trpc } from "../utils/trpc";
 import ScreenWrapper from "../components/screen-wrapper";
-import { Avatar, ListItem, Text, Tab, TabView } from "@rneui/themed";
+import { Text, Tab, TabView } from "@rneui/themed";
 import { useTheme } from "@react-navigation/native";
 import { useUser } from "@clerk/clerk-expo";
-import { Student } from ".prisma/client";
 import { UserByIdResponse } from "@acme/api/src/router/user";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { StackParamList } from "../_app";
-
-type StudentViewProps = {
-  student: Student
-}
-
-function StudentView({ student }: StudentViewProps) {
-  const { colors } = useTheme()
-
-  return (
-    <ListItem
-      containerStyle={{
-        backgroundColor: colors.card
-      }}
-      bottomDivider>
-      <Avatar
-        rounded
-        source={{ uri: 'https://picsum.photos/200' }} />
-      <ListItem.Content>
-        <ListItem.Title
-        ><Text
-          style={{
-            color: colors.text
-          }}
-          h4={true}>{student.firstName}</Text></ListItem.Title>
-      </ListItem.Content>
-    </ListItem>
-  )
-}
+import StudentListItem from "../components/student-list-item";
+import { Student } from ".prisma/client";
+import { DefaultStackParamList } from "../contexts/StackProvider";
 
 type ChildrenFlashListProps = {
-  data: any
-  navigation: any
+  data: Student[]
+  navigation: NativeStackScreenProps<DefaultStackParamList, 'Student'>['navigation']
 }
 
 function ChildrenFlashList({ data, navigation }: ChildrenFlashListProps) {
-  return (<FlashList
-    data={data}
-    estimatedItemSize={20}
-    ItemSeparatorComponent={() => <View className="h-2" />}
-    renderItem={(student: any) => (
-      <TouchableOpacity onPress={() => navigation.navigate('Student',
-        { studentId: student.item.id, name: `${student.item.firstName} ${student.item.lastName}` })}>
-        <StudentView student={student.item} />
-      </TouchableOpacity>
-    )}
-  />
+  return (
+    <FlashList
+      data={data}
+      estimatedItemSize={20}
+      ItemSeparatorComponent={() => <View className="h-2" />}
+      renderItem={(student) => (
+        <TouchableOpacity
+          onPress={() => navigation.navigate('Student',
+            {
+              studentId: student.item.id,
+              name: `${student.item.firstName} ${student.item.lastName}`,
+              profilePicture: student.item.profilePicture
+            })}>
+          <StudentListItem student={student.item} />
+        </TouchableOpacity>
+      )}
+    />
   )
 }
 
 type StudentDisplayProps = {
   user: UserByIdResponse
-  navigation: any
+  navigation: NativeStackScreenProps<DefaultStackParamList, 'Student'>['navigation']
 }
 
 function StudentDisplay({ user, navigation }: StudentDisplayProps) {
@@ -133,7 +112,7 @@ function StudentDisplay({ user, navigation }: StudentDisplayProps) {
   }
 }
 
-type HomeScreenProps = NativeStackScreenProps<StackParamList, 'Home'>
+type HomeScreenProps = NativeStackScreenProps<DefaultStackParamList, 'HomeScreen'>
 
 export const HomeScreen = ({ navigation }: HomeScreenProps) => {
   const { user } = useUser();
@@ -149,7 +128,7 @@ export const HomeScreen = ({ navigation }: HomeScreenProps) => {
   return (
     <ScreenWrapper>
       <ScrollView
-      className="h-full w-full"
+        className="h-full w-full"
         refreshControl={
           <RefreshControl
             refreshing={userQuery.isFetching}
@@ -157,19 +136,17 @@ export const HomeScreen = ({ navigation }: HomeScreenProps) => {
           />
         }
       >
-        <View className="h-full w-full">
-          {userQuery.isLoading && <View className="min-h-screen justify-center items-center">
-            <ActivityIndicator size="large" color={useTheme().colors.primary} />
-          </View>
-          }
-
-          {userQuery.error && <View className="min-h-screen justify-center items-center">
-            <Text className="text-sky-50">Error</Text>
-          </View>
-          }
-
-          {userQuery.data && <StudentDisplay user={userQuery.data} navigation={navigation} />}
+        {userQuery.isLoading && <View className="min-h-screen justify-center items-center">
+          <ActivityIndicator size="large" color={useTheme().colors.primary} />
         </View>
+        }
+
+        {userQuery.error && <View className="min-h-screen justify-center items-center">
+          <Text className="text-sky-50">Error</Text>
+        </View>
+        }
+
+        {userQuery.data && <StudentDisplay user={userQuery.data} navigation={navigation} />}
       </ScrollView>
     </ScreenWrapper >
   );

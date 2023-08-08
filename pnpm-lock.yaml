@@ -90,6 +90,9 @@ importers:
       expo-auth-session:
         specifier: ^4.0.3
         version: 4.0.3(expo@48.0.6)
+      expo-localization:
+        specifier: ~14.1.1
+        version: 14.1.1(expo@48.0.6)
       expo-random:
         specifier: ^13.0.0
         version: 13.0.0(expo@48.0.6)
@@ -120,6 +123,9 @@ importers:
       react-native-gesture-handler:
         specifier: ^2.12.1
         version: 2.12.1(react-native@0.70.5)(react@18.2.0)
+      react-native-localize:
+        specifier: ^3.0.2
+        version: 3.0.2(react-native@0.70.5)(react@18.2.0)
       react-native-reanimated:
         specifier: ^2.14.4
         version: 2.14.4(@babel/core@7.19.3)(react-native@0.70.5)(react@18.2.0)
@@ -208,6 +214,9 @@ importers:
       '@radix-ui/react-popover':
         specifier: ^1.0.6
         version: 1.0.6(@types/react-dom@18.0.9)(@types/react@18.0.25)(react-dom@18.2.0)(react@18.2.0)
+      '@radix-ui/react-scroll-area':
+        specifier: ^1.0.4
+        version: 1.0.4(@types/react-dom@18.0.9)(@types/react@18.0.25)(react-dom@18.2.0)(react@18.2.0)
       '@radix-ui/react-slot':
         specifier: ^1.0.2
         version: 1.0.2(@types/react@18.0.25)(react@18.2.0)
@@ -255,11 +264,7 @@ importers:
         version: 18.2.0
       react-avatar-editor:
         specifier: ^13.0.0
-<<<<<<< HEAD
-        version: 13.0.0(@babel/core@7.19.3)(react-dom@18.2.0)(react@18.2.0)
-=======
         version: 13.0.0(@babel/core@7.22.9)(react-dom@18.2.0)(react@18.2.0)
->>>>>>> 12f19b5 (wip login form)
       react-day-picker:
         specifier: ^8.8.0
         version: 8.8.0(date-fns@2.30.0)(react@18.2.0)
@@ -2000,7 +2005,7 @@ packages:
     peerDependencies:
       '@babel/core': ^7.0.0-0
     dependencies:
-      '@babel/compat-data': 7.22.6
+      '@babel/compat-data': 7.22.9
       '@babel/core': 7.19.3
       '@babel/helper-compilation-targets': 7.22.9(@babel/core@7.19.3)
       '@babel/helper-plugin-utils': 7.22.5
@@ -3858,6 +3863,12 @@ packages:
     resolution: {integrity: sha512-3u2/XxvxB+Q7cMXHnKU0CpBiUK1QWqpgiBv28YDo1zOIJE3FCF8DI2vrp6vuwjGt5h0JGXDSvmSf4D4maVjJdw==}
     requiresBuild: true
 
+  /@radix-ui/number@1.0.1:
+    resolution: {integrity: sha512-T5gIdVO2mmPW3NNhjNgEP3cqMXjXL9UbO0BzWcXfvdBs+BohbQxvd/K5hSVKmn9/lbTdsQVKbUcP5WLCwvUbBg==}
+    dependencies:
+      '@babel/runtime': 7.22.6
+    dev: false
+
   /@radix-ui/primitive@1.0.1:
     resolution: {integrity: sha512-yQ8oGX2GVsEYMWGxcovu1uGWPCxV5BFfeeYxqPmuAzUyLT9qmaMXSAhXpb0WrspIeqYzdJpkh2vHModJPgRIaw==}
     dependencies:
@@ -4358,6 +4369,35 @@ packages:
       '@radix-ui/react-primitive': 1.0.3(@types/react-dom@18.0.9)(@types/react@18.0.25)(react-dom@18.2.0)(react@18.2.0)
       '@radix-ui/react-use-callback-ref': 1.0.1(@types/react@18.0.25)(react@18.2.0)
       '@radix-ui/react-use-controllable-state': 1.0.1(@types/react@18.0.25)(react@18.2.0)
+      '@types/react': 18.0.25
+      '@types/react-dom': 18.0.9
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+    dev: false
+
+  /@radix-ui/react-scroll-area@1.0.4(@types/react-dom@18.0.9)(@types/react@18.0.25)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-OIClwBkwPG+FKvC4OMTRaa/3cfD069nkKFFL/TQzRzaO42Ce5ivKU9VMKgT7UU6UIkjcQqKBrDOIzWtPGw6e6w==}
+    peerDependencies:
+      '@types/react': '*'
+      '@types/react-dom': '*'
+      react: ^16.8 || ^17.0 || ^18.0
+      react-dom: ^16.8 || ^17.0 || ^18.0
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+      '@types/react-dom':
+        optional: true
+    dependencies:
+      '@babel/runtime': 7.22.6
+      '@radix-ui/number': 1.0.1
+      '@radix-ui/primitive': 1.0.1
+      '@radix-ui/react-compose-refs': 1.0.1(@types/react@18.0.25)(react@18.2.0)
+      '@radix-ui/react-context': 1.0.1(@types/react@18.0.25)(react@18.2.0)
+      '@radix-ui/react-direction': 1.0.1(@types/react@18.0.25)(react@18.2.0)
+      '@radix-ui/react-presence': 1.0.1(@types/react-dom@18.0.9)(@types/react@18.0.25)(react-dom@18.2.0)(react@18.2.0)
+      '@radix-ui/react-primitive': 1.0.3(@types/react-dom@18.0.9)(@types/react@18.0.25)(react-dom@18.2.0)(react@18.2.0)
+      '@radix-ui/react-use-callback-ref': 1.0.1(@types/react@18.0.25)(react@18.2.0)
+      '@radix-ui/react-use-layout-effect': 1.0.1(@types/react@18.0.25)(react@18.2.0)
       '@types/react': 18.0.25
       '@types/react-dom': 18.0.9
       react: 18.2.0
@@ -5966,7 +6006,7 @@ packages:
     peerDependencies:
       '@babel/core': ^7.0.0-0
     dependencies:
-      '@babel/compat-data': 7.22.6
+      '@babel/compat-data': 7.22.9
       '@babel/core': 7.19.3
       '@babel/helper-define-polyfill-provider': 0.4.1(@babel/core@7.19.3)
       '@nicolo-ribaudo/semver-v6': 6.3.3
@@ -5979,7 +6019,7 @@ packages:
     peerDependencies:
       '@babel/core': ^7.0.0-0
     dependencies:
-      '@babel/compat-data': 7.22.6
+      '@babel/compat-data': 7.22.9
       '@babel/core': 7.22.9
       '@babel/helper-define-polyfill-provider': 0.4.1(@babel/core@7.22.9)
       '@nicolo-ribaudo/semver-v6': 6.3.3
@@ -7962,6 +8002,15 @@ packages:
       - supports-color
     dev: false
 
+  /expo-localization@14.1.1(expo@48.0.6):
+    resolution: {integrity: sha512-wmozyF82i6muCBWTX+atzqQv9JUjSbEQ0QKYg1Th4QX/qcVd+ajVjFUytSMzg/ME1vGUP1s+LN+SiZ98YokWWw==}
+    peerDependencies:
+      expo: '*'
+    dependencies:
+      expo: 48.0.6(@babel/core@7.19.3)
+      rtl-detect: 1.0.4
+    dev: false
+
   /expo-modules-autolinking@1.1.2:
     resolution: {integrity: sha512-oOlkAccVnHwwR5ccvF/F/x4Omj9HWzSimMUlIVz0SVGdNBEqTPyn0L/d4uIufhyQbEWvrarqL8o5Yz11wEI0SQ==}
     hasBin: true
@@ -9345,7 +9394,7 @@ packages:
       '@babel/preset-env': ^7.1.6
     dependencies:
       '@babel/core': 7.22.9
-      '@babel/parser': 7.22.6
+      '@babel/parser': 7.22.7
       '@babel/plugin-proposal-class-properties': 7.18.6(@babel/core@7.22.9)
       '@babel/plugin-proposal-nullish-coalescing-operator': 7.18.6(@babel/core@7.22.9)
       '@babel/plugin-proposal-optional-chaining': 7.21.0(@babel/core@7.22.9)
@@ -11572,6 +11621,20 @@ packages:
     resolution: {integrity: sha512-oOanj84fJEXUg9FoEAQomA8ISG+DVIrTZ3qF7m69VQUJyOGYyDZmPqKcjvRku4KXlEH6hWO9i4ACLzNBh8gC0A==}
     dev: false
 
+  /react-native-localize@3.0.2(react-native@0.70.5)(react@18.2.0):
+    resolution: {integrity: sha512-/l/oE1LVNgIRRhLbhmfFMHiWV0xhUn0A0iz1ytLVRYywL7FTp8Rx2vkJS/q/RpExDvV7yLw2493XZBYIM1dnLQ==}
+    peerDependencies:
+      react: '>=18.1.0'
+      react-native: '>=0.70.0'
+      react-native-macos: '>=0.70.0'
+    peerDependenciesMeta:
+      react-native-macos:
+        optional: true
+    dependencies:
+      react: 18.2.0
+      react-native: 0.70.5(patch_hash=rnbco5eodjkfp6ucueusre3z4i)(@babel/core@7.19.3)(@babel/preset-env@7.19.3)(react@18.2.0)
+    dev: false
+
   /react-native-ratings@8.1.0(react-native@0.70.5)(react@18.2.0):
     resolution: {integrity: sha512-+QOJ4G3NjVkI1D+tk4EGx1dCvVfbD2nQdkrj9cXrcAoEiwmbep4z4bZbCKmWMpQ5h2dqbxABU8/eBnbDmvAc3g==}
     peerDependencies:
@@ -12135,6 +12198,10 @@ packages:
     hasBin: true
     dependencies:
       glob: 7.2.3
+
+  /rtl-detect@1.0.4:
+    resolution: {integrity: sha512-EBR4I2VDSSYr7PkBmFy04uhycIpDKp+21p/jARYXlCSjQksTBQcJ0HFUPOO79EPPH5JS6VAhiIQbycf0O3JAxQ==}
+    dev: false
 
   /run-applescript@5.0.0:
     resolution: {integrity: sha512-XcT5rBksx1QdIhlFOCtgZkB99ZEouFZ1E2Kc2LHqNW13U3/74YGdkQRmThTwxy4QIyookibDKYZOPqX//6BlAg==}
