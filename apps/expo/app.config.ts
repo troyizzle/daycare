@@ -7,7 +7,7 @@ const defineConfig = (_ctx: ConfigContext): ExpoConfig => ({
   slug: "daycare",
   version: "1.0.0",
   orientation: "portrait",
-  icon: "./assets/splash.png",
+  icon: "./assets/icon.png",
   userInterfaceStyle: "light",
   splash: {
     image: "./assets/splash.png",
