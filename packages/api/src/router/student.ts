@@ -4,6 +4,7 @@ import { clerkClient } from "@clerk/nextjs"
 import { studentProfilePictureSchema, studentUpdateSchema } from "@acme/db/schema/student"
 import { inferProcedureOutput } from "@trpc/server";
 import { AppRouter } from ".";
+import { sendNotification } from "../../../../apps/expo/src/utils/push-notifications";
 
 export type StudentAllResponse = inferProcedureOutput<AppRouter["student"]["all"]>;
 export type StudentLogsByStudentIdResponse = inferProcedureOutput<AppRouter["student"]["logsByStudentId"]>;
@@ -95,13 +96,47 @@ export const studentRouter = router({
       actionId: z.string(),
       notes: z.string(),
     }))
-    .mutation(({ ctx, input }) => {
-      return ctx.prisma.studentActionLog.create({
+    .mutation(async ({ ctx, input }) => {
+      const data = await ctx.prisma.studentActionLog.create({
         data: {
           ...input,
           teacherId: ctx.auth.userId
+        },
+        include: {
+          student: {
+            select: {
+              firstName: true,
+              lastName: true
+            }
+          },
+          action: true
         }
       })
+
+      const parents = await ctx.prisma.parentStudent.findMany({
+        where: {
+          studentId: input.studentId
+        }
+      })
+
+      const pushTokens = await ctx.prisma.userPushToken.findMany({
+        where: {
+          userId: {
+            in: parents.map(parent => parent.userId)
+          }
+        }
+      })
+
+      pushTokens.forEach(pushToken => {
+        sendNotification(pushToken.pushToken,
+          {
+            body: `${data.student.firstName} ${data.student.lastName} ${data.action.name}`
+           }
+        )
+      })
+
+
+      return data
     }),
   byIdProfile: protectedProcedure
     .input(z.object({

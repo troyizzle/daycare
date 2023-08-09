@@ -5,6 +5,7 @@ import { roleRouter } from "./role";
 import { classroomRouter } from "./classroom";
 import { studentRouter } from "./student";
 import { contactInformationRouter } from "./contactInformation";
+import { userPushTokenRouter } from "./userPushToken";
 
 export const appRouter = router({
   action: actionRouter,
@@ -12,7 +13,8 @@ export const appRouter = router({
   classroom: classroomRouter,
   contactInformation: contactInformationRouter,
   role: roleRouter,
-  user: userRouter
+  user: userRouter,
+  userPushToken: userPushTokenRouter
 });
 
 // export type definition of API

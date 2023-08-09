@@ -7,6 +7,7 @@ import { tokenCache } from "./utils/cache";
 import { NavigationContainer, useTheme } from '@react-navigation/native';
 import { DefaultTheme, DarkTheme } from "@react-navigation/native"
 import DefaultStackProvider from "./contexts/StackProvider";
+import PushNotificationProvider from "./contexts/PushNotificationProvider";
 
 export const App = () => {
   const { dark } = useTheme()
@@ -19,9 +20,11 @@ export const App = () => {
       >
         <SignedIn>
           <TRPCProvider>
-            <SafeAreaProvider>
-              <DefaultStackProvider />
-            </SafeAreaProvider>
+            <PushNotificationProvider>
+              <SafeAreaProvider>
+                <DefaultStackProvider />
+              </SafeAreaProvider>
+            </PushNotificationProvider>
           </TRPCProvider>
         </SignedIn>
         <SignedOut>
