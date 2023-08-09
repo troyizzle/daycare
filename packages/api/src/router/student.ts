@@ -31,11 +31,21 @@ export const studentRouter = router({
       date: z.date()
     })
   ).query(async ({ ctx, input }) => {
+    const { date } = input
+    console.log('og date', date)
+    const startOfDay = new Date(date)
+    startOfDay.setUTCHours(0, 0, 0, 0)
+
+    const endOfDay = new Date(date)
+    endOfDay.setUTCHours(23, 59, 59, 999)
+    console.log("query dates", startOfDay, endOfDay)
+
     const data = await ctx.prisma.studentActionLog.findMany({
       where: {
         studentId: input.studentId,
-        createdAt: {
-          gte: input.date,
+        postedAt: {
+          gte: startOfDay.toISOString(),
+          lte: endOfDay.toISOString()
         }
       },
       include: {
@@ -97,10 +107,14 @@ export const studentRouter = router({
       notes: z.string(),
     }))
     .mutation(async ({ ctx, input }) => {
+      const userTimezoneOffset = new Date().getTimezoneOffset() * 60000;
+      const postedAt = new Date(Date.now() - userTimezoneOffset)
+
       const data = await ctx.prisma.studentActionLog.create({
         data: {
           ...input,
-          teacherId: ctx.auth.userId
+          teacherId: ctx.auth.userId,
+          postedAt: postedAt.toISOString()
         },
         include: {
           student: {

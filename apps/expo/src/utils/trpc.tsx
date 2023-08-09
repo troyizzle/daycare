@@ -27,7 +27,7 @@ const getBaseUrl = () => {
    * you don't have anything else running on it, or you'd have to change it.
    */
   const localhost = Constants.manifest?.debuggerHost?.split(":")[0];
-  return 'https://82ae-35-151-161-23.ngrok.io'
+  return 'https://4a8c-35-151-161-23.ngrok.io'
   if (!localhost)
     throw new Error("failed to get localhost, configure it manually");
   return `http://${localhost}:3000`;

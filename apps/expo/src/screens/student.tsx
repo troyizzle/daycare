@@ -49,8 +49,13 @@ export function StudentScreen({ route }: StudentScreenProps) {
             <DateTimePicker
               mode="date"
               value={chosenDate}
+              format="MM/dd/yyyy"
+              timeZoneOffsetInSeconds={3600}
               onChange={(_event, selectedDate) => {
-                if (selectedDate) setChosenDate(selectedDate);
+                console.log("from date picker", selectedDate)
+                const dateInUserTimezone = new Date(selectedDate?.getTime() - (selectedDate?.getTimezoneOffset() ?? 0) * 60000);
+                console.log("date in user timezone", dateInUserTimezone)
+                if (selectedDate) setChosenDate(dateInUserTimezone);
                 studentLogQuery.refetch()
 
               }}

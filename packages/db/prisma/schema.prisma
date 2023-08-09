@@ -81,6 +81,7 @@ model StudentActionLog {
   teacherId String
   notes     String?
   createdAt DateTime @default(now())
+  postedAt  DateTime
 }
 
 model Role {
