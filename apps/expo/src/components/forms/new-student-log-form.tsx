@@ -13,6 +13,7 @@ type NewActionFormProps = {
 }
 
 export default function NewStudentActionForm({ babyId, modalVisible, setModalVisible }: NewActionFormProps) {
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
   const { colors } = useTheme()
 
   const actionQuery = trpc.action.all.useQuery(undefined, {
