@@ -113,14 +113,13 @@ function StudentDisplay({ user, navigation }: StudentDisplayProps) {
   }
 }
 
-type HomeScreenProps = NativeStackScreenProps<DefaultStackParamList, 'HomeScreen'>
+type HomeProps = CompositeScreenProps<
+  DrawerScreenProps<DrawerParamList, 'Home'>,
+  NativeStackScreenProps<StackParamList>
+>
 
-export const HomeScreen = ({ navigation }: HomeScreenProps) => {
-  const { user } = useUser();
-
-  if (!user) {
-    throw new Error("User is undefined");
-  }
+export const Home = ({ navigation }: HomeProps) => {
+  const user = useUser().user!
 
   const userQuery = trpc.user.byId.useQuery({
     id: user.id

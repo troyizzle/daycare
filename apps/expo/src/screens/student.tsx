@@ -41,7 +41,8 @@ export function StudentScreen({ route }: StudentScreenProps) {
             style={{
               color: colors.text
             }}
-            h1={true}>
+            h1
+          >
             {route.params.name}
           </Text>
           <View

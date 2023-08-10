@@ -34,10 +34,8 @@ export default function StudentAddActionButton({
     }
 
     if (roles.includes("teacher")) {
-      console.log(userQuery.data.students[0]?.student.id)
-      console.log(studentId)
       const hasStudent = userQuery.data.students.find(student => student.student.id == studentId);
-      console.log(hasStudent)
+
       if (hasStudent) {
         setCanAddAction(true);
       }

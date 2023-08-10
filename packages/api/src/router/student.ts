@@ -66,7 +66,6 @@ export const studentRouter = router({
       ...log,
       teacher: users.find(user => user.id === log.teacherId)
     }))
-
   }),
   update: protectedProcedure
     .input(studentUpdateSchema)
