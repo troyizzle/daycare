@@ -32,6 +32,7 @@ export const App = () => {
           <SignInSignUpScreen />
         </SignedOut>
       </ClerkProvider>
+      <StatusBar />
     </NavigationContainer >
   );
 };
