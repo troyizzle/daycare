@@ -23,7 +23,7 @@ export const App = () => {
           <TRPCProvider>
             <PushNotificationProvider>
               <SafeAreaProvider>
-                <DefaultStackProvider />
+                <Navigation />
               </SafeAreaProvider>
             </PushNotificationProvider>
           </TRPCProvider>
