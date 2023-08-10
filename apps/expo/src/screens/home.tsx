@@ -4,17 +4,18 @@ import { FlashList } from "@shopify/flash-list";
 import { trpc } from "../utils/trpc";
 import ScreenWrapper from "../components/screen-wrapper";
 import { Text, Tab, TabView } from "@rneui/themed";
-import { useTheme } from "@react-navigation/native";
+import { CompositeScreenProps, useTheme } from "@react-navigation/native";
 import { useUser } from "@clerk/clerk-expo";
 import { UserByIdResponse } from "@acme/api/src/router/user";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import StudentListItem from "../components/student-list-item";
 import { Student } from ".prisma/client";
-import { DefaultStackParamList } from "../contexts/StackProvider";
+import { DrawerScreenProps } from "@react-navigation/drawer";
+import { DrawerParamList, StackParamList } from "../navigation";
 
 type ChildrenFlashListProps = {
   data: Student[]
-  navigation: NativeStackScreenProps<DefaultStackParamList, 'Student'>['navigation']
+  navigation: NativeStackScreenProps<StackParamList, 'Student'>['navigation']
 }
 
 function ChildrenFlashList({ data, navigation }: ChildrenFlashListProps) {
@@ -40,7 +41,7 @@ function ChildrenFlashList({ data, navigation }: ChildrenFlashListProps) {
 
 type StudentDisplayProps = {
   user: UserByIdResponse
-  navigation: NativeStackScreenProps<DefaultStackParamList, 'Student'>['navigation']
+  navigation: NativeStackScreenProps<StackParamList, 'Student'>['navigation']
 }
 
 function StudentDisplay({ user, navigation }: StudentDisplayProps) {

@@ -49,40 +49,44 @@ export function StudentScreen({ route }: StudentScreenProps) {
             <DateTimePicker
               mode="date"
               value={chosenDate}
-              format="MM/dd/yyyy"
+              dateFormat="day month year"
               timeZoneOffsetInSeconds={3600}
               onChange={(_event, selectedDate) => {
-                console.log("from date picker", selectedDate)
-                const dateInUserTimezone = new Date(selectedDate?.getTime() - (selectedDate?.getTimezoneOffset() ?? 0) * 60000);
-                console.log("date in user timezone", dateInUserTimezone)
-                if (selectedDate) setChosenDate(dateInUserTimezone);
-                studentLogQuery.refetch()
-
+                if (selectedDate) {
+                  const dateInUserTimezone = new Date(selectedDate?.getTime() - (selectedDate?.getTimezoneOffset() ?? 0) * 60000);
+                  setChosenDate(dateInUserTimezone);
+                  studentLogQuery.refetch()
+                }
               }}
               themeVariant={useTheme().dark ? "dark" : "light"}
             />
           </View>
         </View>
-      </View >
-      {studentLogQuery.isLoading && <View className="mt-2"><ActivityIndicator color={colors.primary} size="large" /></View>}
+      </View>
+
+      {studentLogQuery.isLoading && (
+        <View className="mt-2"><ActivityIndicator color={colors.primary} size="large" /></View>
+      )}
+
       {studentLogQuery.data && (
-        <>
+        <View className="h-full">
           <FlashList
             data={studentLogQuery.data}
             estimatedItemSize={100}
-            ItemSeparatorComponent={() => <View className="border-t border-gray-500" style={{ height: 10 }} />}
+            ItemSeparatorComponent={() => <View className="border-t" style={{ borderColor: colors.border }} />}
             renderItem={({ item }) => (
-              <View style={{
-                width: Dimensions.get("screen").width
-              }}>
+              <View
+                style={{
+                  width: Dimensions.get("screen").width
+                }}>
                 <StudentActionLogItem log={item} />
               </View>
             )}
           />
-          <NewStudentActionForm babyId={studentId} modalVisible={modalVisible} setModalVisible={setModalVisible} />
-          <StudentAddActionButton setModalVisible={setModalVisible} studentId={route.params.studentId} />
-        </>
+        </View>
       )}
+      {modalVisible && <NewStudentActionForm babyId={studentId} modalVisible={modalVisible} setModalVisible={setModalVisible} />}
+      <StudentAddActionButton setModalVisible={setModalVisible} studentId={route.params.studentId} />
     </ScreenWrapper >
   )
 }

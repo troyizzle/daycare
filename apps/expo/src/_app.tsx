@@ -4,16 +4,17 @@ import { TRPCProvider } from "./utils/trpc";
 import { SignInSignUpScreen } from "./screens/signin";
 import { ClerkProvider, SignedIn, SignedOut } from "@clerk/clerk-expo";
 import { tokenCache } from "./utils/cache";
-import { NavigationContainer, useTheme } from '@react-navigation/native';
+import { NavigationContainer } from '@react-navigation/native';
 import { DefaultTheme, DarkTheme } from "@react-navigation/native"
-import DefaultStackProvider from "./contexts/StackProvider";
 import PushNotificationProvider from "./contexts/PushNotificationProvider";
+import { StatusBar, useColorScheme } from "react-native";
+import Navigation from "./navigation";
 
 export const App = () => {
-  const { dark } = useTheme()
+  const scheme = useColorScheme();
 
   return (
-    <NavigationContainer theme={dark ? DarkTheme : DefaultTheme}>
+    <NavigationContainer theme={scheme === 'dark' ? DarkTheme : DefaultTheme}>
       <ClerkProvider
         publishableKey="pk_test_d29uZHJvdXMtY293YmlyZC04LmNsZXJrLmFjY291bnRzLmRldiQ"
         tokenCache={tokenCache}

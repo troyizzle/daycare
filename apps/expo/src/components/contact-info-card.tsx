@@ -1,4 +1,5 @@
 import { ContactInformation } from ".prisma/client"
+import { useTheme } from "@react-navigation/native"
 import { Card } from "@rneui/base"
 import { CardTitle } from "@rneui/base/dist/Card/Card.Title"
 import { Icon } from "@rneui/themed"
@@ -9,9 +10,13 @@ type ContactInfoCardProps = {
 }
 
 export default function ContactInfoCard({ contactInfo }: ContactInfoCardProps) {
+  const { colors } = useTheme();
   return (
     <View>
-      <Card>
+      <Card containerStyle={{
+        backgroundColor: colors.card,
+        borderColor: colors.border,
+      }}>
         <CardTitle h4>
           {contactInfo.firstName} {contactInfo.lastName}
         </CardTitle>
