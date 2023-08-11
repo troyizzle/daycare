@@ -1,112 +1,86 @@
-import React, { useEffect, useState } from "react";
-import { View, SafeAreaView, Text, Pressable } from "react-native";
-import SignInWithOAuth from "../components/SignInWithOAuth";
+import React from "react";
+import { View, SafeAreaView, Text, Pressable, useColorScheme } from "react-native";
 import LoginSVG from "../../assets/login.svg"
 import InputField from "../components/input-field";
-import { useSignIn } from "@clerk/clerk-expo";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { SigninStackParamList } from "../navigation/login";
+import { Controller, useForm } from "react-hook-form"
+import { z } from "zod"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useTheme } from "@react-navigation/native";
 
-export const SignInSignUpScreen = () => {
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [codeSent, setCodeSent] = useState(false);
-  const [code, setCode] = useState<string>("");
-  const { signIn, setActive, isLoaded } = useSignIn();
+type SignInProps = NativeStackScreenProps<SigninStackParamList, "Signin">
 
-  useEffect(() => {
-    if (code.length != 6 || !isLoaded) {
-      return
-    }
+export function SignIn({ navigation }: SignInProps) {
+  const scheme = useColorScheme();
+  const { colors } = useTheme();
+  const phoneNumberSchema = z.object({
+    phoneNumber: z.string().min(10).max(10).regex(/^\d+$/)
+  })
 
-    async function login() {
-      if (!signIn) return
+  type PhoneNumberInput = z.infer<typeof phoneNumberSchema>
 
-      const { createdSessionId } = await signIn.attemptFirstFactor({
-        strategy: "phone_code",
-        code,
-      })
+  const { control, formState, handleSubmit } = useForm<PhoneNumberInput>({
+    resolver: zodResolver(phoneNumberSchema)
+  });
 
-      if (createdSessionId) {
-        await setActive({
-          session: createdSessionId,
-        })
-      }
-    }
-
-    login()
-  }, [code])
+  function onSubmit(data: PhoneNumberInput) {
+    navigation.navigate("Verification", {
+      phoneNumber: data.phoneNumber
+    })
+  }
 
   return (
     <SafeAreaView>
-      <View className="items-center">
-        <LoginSVG
-          height={200}
-          width={200}
-          style={{
-            transform: [{ rotate: "-5deg" }],
-          }}
-        />
-      </View>
+      {scheme != "dark" && (
+        <View className="items-center">
+          <LoginSVG
+            height={200}
+            width={200}
+            style={{
+              transform: [{ rotate: "-5deg" }],
+            }}
+          />
+        </View>
+      )}
 
       <View className="h-full w-full p-3">
-        {codeSent ? (
-          <InputField
-            value={code}
-            onChangeText={(text) => setCode(text)}
-            placeholder="Verification Code..."
-            keyboardType="number-pad"
-          />
-        ) : (
-          <>
-            <Text
-              style={{
-                fontSize: 28,
-                fontWeight: '500',
-                color: '#333',
-                marginBottom: 10
-              }}
-            >
-              Login
-            </Text>
+        <Text
+          style={{
+            fontSize: 28,
+            fontWeight: '500',
+            color: colors.text,
+            marginBottom: 10
+          }}
+        >
+          Login
+        </Text>
+        <Controller
+          control={control}
+          render={({ field: { onChange, value } }) => (
             <InputField
-              value={phoneNumber}
-              onChangeText={(text) => setPhoneNumber(text)}
+              value={value}
+              onChangeText={(text) => onChange(text)}
               placeholder="Phone Number..."
               keyboardType="phone-pad"
             />
-            <Pressable
-              className="rounded p-3 mt-3 bg-blue-500"
-              onPress={async () => {
-                if (!isLoaded) return
-
-                const { supportedFirstFactors } = await signIn.create({
-                  identifier: `+1${phoneNumber}`,
-                })
-
-                const firstPhoneFactor = supportedFirstFactors.find(factor => {
-                  return factor.strategy === 'phone_code'
-                });
-
-                if (!firstPhoneFactor) {
-                  throw new Error("No phone factor found")
-                }
-
-                const { phoneNumberId } = firstPhoneFactor;
-
-                await signIn.prepareFirstFactor({
-                  strategy: "phone_code",
-                  phoneNumberId,
-                })
-
-                setCodeSent(true)
-              }}
-            >
-              <Text className="text-white text-center">Get Code</Text>
-            </Pressable>
-
-            <Text className="text-center my-3">or</Text>
-            <SignInWithOAuth />
-          </>
-        )}
+          )}
+          name="phoneNumber"
+        />
+        <Pressable
+          disabled={!formState.isValid || formState.isSubmitting}
+          className="rounded p-3 mt-3"
+          style={{
+            backgroundColor: colors.primary,
+            opacity: formState.isValid ? 1 : 0.5
+          }}
+          onPress={handleSubmit(onSubmit)}
+        >
+          <Text className="text-white text-center">
+            {formState.isSubmitting ? "Submitting..." : "Get Code"}
+          </Text>
+        </Pressable>
       </View>
     </SafeAreaView >
   );
-};
+}

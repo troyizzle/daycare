@@ -48,6 +48,9 @@ importers:
       '@expo/ngrok':
         specifier: ^4.1.0
         version: 4.1.0
+      '@hookform/resolvers':
+        specifier: ^3.1.1
+        version: 3.1.1(react-hook-form@7.45.1)
       '@react-native-community/datetimepicker':
         specifier: ^7.4.0
         version: 7.4.0
@@ -123,6 +126,9 @@ importers:
       react-dom:
         specifier: 18.2.0
         version: 18.2.0(react@18.2.0)
+      react-hook-form:
+        specifier: ^7.45.1
+        version: 7.45.1(react@18.2.0)
       react-native:
         specifier: 0.70.5
         version: 0.70.5(patch_hash=rnbco5eodjkfp6ucueusre3z4i)(@babel/core@7.19.3)(@babel/preset-env@7.19.3)(react@18.2.0)
