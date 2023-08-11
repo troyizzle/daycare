@@ -6,7 +6,9 @@ import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import Link from "next/link";
 import { UserAllResponse } from "@acme/api/src/router/user";
 
-export const columns: ColumnDef<UserAllResponse[number]>[] = [
+type User = UserAllResponse[number]
+
+export const columns: ColumnDef<User>[] = [
   {
     accessorKey: "profileImageUrl",
     header: "",
@@ -73,13 +75,6 @@ export const columns: ColumnDef<UserAllResponse[number]>[] = [
         <span>Roles</span>
         )
     },
-    cell: ({ cell }) => {
-      return (
-        <span>
-          {cell.getValue().join(", ")}
-        </span>
-      )
-    }
   },
   {
     accessorKey: "childrenCount",
@@ -88,13 +83,6 @@ export const columns: ColumnDef<UserAllResponse[number]>[] = [
         <span>Children</span>
       )
     },
-    cell: ({ cell }) => {
-      return (
-        <span>
-          {cell.getValue()}
-        </span>
-      )
-    }
   },
   {
     id: "actions",

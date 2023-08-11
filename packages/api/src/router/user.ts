@@ -107,7 +107,7 @@ export const userRouter = router({
     }),
   create: protectedProcedure
     .input(userCreateSchema)
-    .mutation(async ({ ctx, input }) => {
+    .mutation(async ({ input }) => {
       try {
         const user = await clerkClient.users.createUser({
           firstName: input.firstName,

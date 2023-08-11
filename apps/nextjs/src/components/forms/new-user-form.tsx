@@ -2,7 +2,7 @@ import { trpc } from "@/utils/trpc";
 import { UserCreateInput, userCreateSchema } from "@acme/db/schema/user";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
-import { Form, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import AdminModalForm from "../admin-modal-form";
 import { FormField, FormItem, FormLabel, FormMessage } from "../ui/form";

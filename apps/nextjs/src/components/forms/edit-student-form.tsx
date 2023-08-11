@@ -21,7 +21,7 @@ type EditStudentForm = {
   setModalVisible: React.Dispatch<SetStateAction<boolean>>
 }
 
-export default function EditStudentForm({ student, modalVisible, setModalVisible }: EditStudentForm) {
+export default function EditStudentForm({ student, setModalVisible }: EditStudentForm) {
   const contactInfoQuery = trpc.contactInformation.allByStudentId.useQuery({
     studentId: student.id
   })
@@ -66,7 +66,7 @@ export default function EditStudentForm({ student, modalVisible, setModalVisible
     if (contactInfoQuery.data) {
       replace(contactInfoQuery.data)
     }
-  }, [contactInfoQuery.data])
+  }, [replace, contactInfoQuery.data])
 
   return (
     <Form {...form}>

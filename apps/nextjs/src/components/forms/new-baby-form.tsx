@@ -14,7 +14,7 @@ import { Icons } from "../icons";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 
-export default function NewBabyForm() {
+export default function NewStudentForm() {
   const [open, setIsOpen] = useState(false);
   const ctx = trpc.useContext();
 

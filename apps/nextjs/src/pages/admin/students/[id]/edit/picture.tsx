@@ -66,6 +66,7 @@ function AvatarForm({ studentId, profilePicture }: AvatarFormProps) {
     },
   });
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async function onSubmit(_data: StudentProfilePictureInput) {
     if (editor.current) {
       const canvas = editor.current.getImageScaledToCanvas();

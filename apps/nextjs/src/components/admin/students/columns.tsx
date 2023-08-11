@@ -18,7 +18,7 @@ export const columns: ColumnDef<Student>[] = [
       if (!profilePicture) return null;
 
       return <Avatar>
-        <AvatarImage src={profilePicture} />
+        <AvatarImage src={profilePicture as string} />
       </Avatar>
     }
   },

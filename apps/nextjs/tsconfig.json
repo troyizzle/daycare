@@ -1,11 +1,8 @@
 {
   "extends": "../../tsconfig.json",
   "exclude": [],
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "**/*.cjs", "**/*.mjs"],
-  "references": [
-    {
-      "path": "../../packages/db/schema"
-    }
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "**/*.cjs", "**/*.mjs",
+  "../../packages/db/schema/**/*.ts"
   ],
   "compilerOptions": {
     "jsx": "preserve",

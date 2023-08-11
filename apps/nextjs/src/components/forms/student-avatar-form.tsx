@@ -4,7 +4,7 @@ import AvatarEditor from "react-avatar-editor";
 
 export default function StudentAvatarForm() {
   const [image, setImage] = useState<File | undefined>(undefined);
-  const editor = useRef(null)
+  const editor = useRef<AvatarEditor>(null)
 
   const { startUpload } = useUploadThing("imageUploader", {
     onClientUploadComplete: (data) => {
@@ -37,9 +37,11 @@ export default function StudentAvatarForm() {
         if (editor.current) {
           const canvas = editor.current.getImageScaledToCanvas();
           canvas.toBlob((blob) => {
-            startUpload([new File([blob], "test.jpg", {
-              type: "image/jpeg",
-            })]);
+            if (blob) {
+              startUpload([new File([blob], "test.jpg", {
+                type: "image/jpeg",
+              })]);
+            }
           });
         }
       }}>Save</button>

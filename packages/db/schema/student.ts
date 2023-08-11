@@ -35,4 +35,12 @@ export const studentUpdateSchema = z.object({
 
 export type StudentUpdateInput = z.infer<typeof studentUpdateSchema>
 
+export const studentNewLogSchema = z.object({
+  studentId: z.string(),
+  actionId: z.string(),
+  notes: z.string().optional()
+})
+
+export type StudentNewLogInput = z.infer<typeof studentNewLogSchema>
+
 

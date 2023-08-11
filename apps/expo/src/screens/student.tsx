@@ -25,7 +25,7 @@ export function StudentScreen({ route }: StudentScreenProps) {
 
   const studentLogQuery = trpc.student.logsByStudentId.useQuery({
     studentId,
-    date: chosenDate
+    date: new Date(chosenDate.getTime() - (chosenDate.getTimezoneOffset() ?? 0) * 60000)
   });
 
   return (
@@ -54,8 +54,7 @@ export function StudentScreen({ route }: StudentScreenProps) {
               timeZoneOffsetInSeconds={3600}
               onChange={(_event, selectedDate) => {
                 if (selectedDate) {
-                  const dateInUserTimezone = new Date(selectedDate?.getTime() - (selectedDate?.getTimezoneOffset() ?? 0) * 60000);
-                  setChosenDate(dateInUserTimezone);
+                  setChosenDate(selectedDate);
                   studentLogQuery.refetch()
                 }
               }}
@@ -73,7 +72,7 @@ export function StudentScreen({ route }: StudentScreenProps) {
         <View className="h-full">
           <FlashList
             data={studentLogQuery.data}
-            estimatedItemSize={100}
+            estimatedItemSize={20}
             ItemSeparatorComponent={() => <View className="border-t" style={{ borderColor: colors.border }} />}
             renderItem={({ item }) => (
               <View

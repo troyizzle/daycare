@@ -1,7 +1,7 @@
 import { router, publicProcedure, protectedProcedure } from "../trpc";
 import { z } from "zod";
 import { clerkClient } from "@clerk/nextjs"
-import { studentProfilePictureSchema, studentUpdateSchema } from "@acme/db/schema/student"
+import { studentNewLogSchema, studentNewSchema, studentProfilePictureSchema, studentUpdateSchema } from "@acme/db/schema/student"
 import { inferProcedureOutput } from "@trpc/server";
 import { AppRouter } from ".";
 import { sendNotification } from "../../../../apps/expo/src/utils/push-notifications";
@@ -67,6 +67,14 @@ export const studentRouter = router({
       teacher: users.find(user => user.id === log.teacherId)
     }))
   }),
+  create: protectedProcedure
+    .input(studentNewSchema)
+    .mutation(({ ctx, input: data }) => {
+
+      return ctx.prisma.student.create({
+        data
+      })
+    }),
   update: protectedProcedure
     .input(studentUpdateSchema)
     .mutation(({ ctx, input }) => {
@@ -100,11 +108,7 @@ export const studentRouter = router({
       })
     }),
   createLog: protectedProcedure
-    .input(z.object({
-      studentId: z.string(),
-      actionId: z.string(),
-      notes: z.string(),
-    }))
+    .input(studentNewLogSchema)
     .mutation(async ({ ctx, input }) => {
       const userTimezoneOffset = new Date().getTimezoneOffset() * 60000;
       const postedAt = new Date(Date.now() - userTimezoneOffset)
@@ -144,7 +148,7 @@ export const studentRouter = router({
         sendNotification(pushToken.pushToken,
           {
             body: `${data.student.firstName} ${data.student.lastName} ${data.action.name}`
-           }
+          }
         )
       })
 
