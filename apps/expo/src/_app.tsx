@@ -1,7 +1,6 @@
 import React from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { TRPCProvider } from "./utils/trpc";
-import { SignInSignUpScreen } from "./screens/signin";
 import { ClerkProvider, SignedIn, SignedOut } from "@clerk/clerk-expo";
 import { tokenCache } from "./utils/cache";
 import { NavigationContainer } from '@react-navigation/native';
@@ -9,6 +8,7 @@ import { DefaultTheme, DarkTheme } from "@react-navigation/native"
 import PushNotificationProvider from "./contexts/PushNotificationProvider";
 import { StatusBar, useColorScheme } from "react-native";
 import Navigation from "./navigation";
+import SigninNavigation from "./navigation/login";
 
 export const App = () => {
   const scheme = useColorScheme();
@@ -29,7 +29,7 @@ export const App = () => {
           </TRPCProvider>
         </SignedIn>
         <SignedOut>
-          <SignInSignUpScreen />
+          <SigninNavigation />
         </SignedOut>
       </ClerkProvider>
       <StatusBar />
