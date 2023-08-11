@@ -10,7 +10,10 @@
     "dev": "pnpm with-env prisma studio --port 5556",
     "db-push": "pnpm with-env prisma db push",
     "db-generate": "pnpm with-env prisma generate",
-    "db-seed": "pnpm with-env prisma db seed"
+    "db-seed": "pnpm with-env prisma db seed",
+    "db-migrate": "pnpm with-env prisma migrate dev --name init",
+    "db-migrate-prod": "pnpm with-env prisma migrate deploy"
+
   },
   "prisma": {
     "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
