@@ -28,6 +28,7 @@ const defineConfig = (_ctx: ConfigContext): ExpoConfig => ({
     adaptiveIcon: {
       foregroundImage: "./assets/splash.png",
     },
+    package: "com.troyizzle.daycare"
   },
   extra: {
     eas: {
