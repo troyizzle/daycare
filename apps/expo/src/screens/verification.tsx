@@ -1,11 +1,9 @@
 import { useState } from "react"
 import { useSignIn } from "@clerk/clerk-expo"
-import { useTheme } from "@react-navigation/native"
 import { NativeStackScreenProps } from "@react-navigation/native-stack"
-import { Button, Text } from "@rneui/themed"
+import { Button, Input, Text } from "@rneui/themed"
 import { useEffect }   from "react"
 import { View } from "react-native"
-import InputField from "../components/input-field"
 import ScreenWrapper from "../components/screen-wrapper"
 import { SigninStackParamList } from "../navigation/login"
 import { z } from "zod"
@@ -18,7 +16,6 @@ export default function Verification({ route }: VerificationProps) {
   const [nextCodeSendTimer, setNextCodeSendTimer] = useState(0)
   const [isSendingCode, setIsSendingCode] = useState(false)
 
-  const { colors } = useTheme()
   const { isLoaded, signIn, setActive } = useSignIn()
 
   const codeSchema = z.object({
@@ -52,6 +49,7 @@ export default function Verification({ route }: VerificationProps) {
 
   async function sendCode() {
     if (isSendingCode || !isLoaded) return;
+
     try {
       const { phoneNumber } = route.params
 
@@ -98,14 +96,20 @@ export default function Verification({ route }: VerificationProps) {
     sendCode()
   }, [isLoaded])
 
+  useEffect(() => {
+    if (!formState.isValid) return;
+
+    handleSubmit(onSubmit)()
+
+  }, [formState.isValid])
+
   return (
     <ScreenWrapper>
-      <View className="flex flex-col gap-5 mt-5">
+      <View className="flex flex-col gap-5 mt-5 p-4">
         <Text
           h2
           style={{
             textAlign: 'center',
-            color: colors.text,
           }}
         >
           Verification Code
@@ -113,7 +117,6 @@ export default function Verification({ route }: VerificationProps) {
         <Text
           style={{
             textAlign: 'center',
-            color: colors.text,
           }}
         >
           We have sent a verification code to your phone number.
@@ -122,7 +125,6 @@ export default function Verification({ route }: VerificationProps) {
           <Text
             style={{
               textAlign: 'center',
-              color: colors.text,
             }}
           >
             Please enter the 6 digit code below.
@@ -134,14 +136,13 @@ export default function Verification({ route }: VerificationProps) {
             control={control}
             name="code"
             render={({ field: { onChange, value } }) => (
-              <InputField
+              <Input
                 value={value}
                 onChangeText={onChange}
                 placeholder="Verification Code"
                 keyboardType="number-pad"
                 style={{
                   textAlign: 'center',
-                  color: colors.text,
                 }}
               />
             )}

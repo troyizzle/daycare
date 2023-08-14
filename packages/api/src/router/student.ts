@@ -2,7 +2,7 @@ import { router, publicProcedure, protectedProcedure } from "../trpc";
 import { z } from "zod";
 import { clerkClient } from "@clerk/nextjs"
 import { studentNewLogSchema, studentNewSchema, studentProfilePictureSchema, studentUpdateSchema } from "@acme/db/schema/student"
-import { inferProcedureOutput } from "@trpc/server";
+import { inferProcedureOutput, TRPCError } from "@trpc/server";
 import { AppRouter } from ".";
 import { sendNotification } from "../../../../apps/expo/src/utils/push-notifications";
 
@@ -32,13 +32,11 @@ export const studentRouter = router({
     })
   ).query(async ({ ctx, input }) => {
     const { date } = input
-    console.log('og date', date)
     const startOfDay = new Date(date)
     startOfDay.setUTCHours(0, 0, 0, 0)
 
     const endOfDay = new Date(date)
     endOfDay.setUTCHours(23, 59, 59, 999)
-    console.log("query dates", startOfDay, endOfDay)
 
     const data = await ctx.prisma.studentActionLog.findMany({
       where: {
@@ -110,50 +108,71 @@ export const studentRouter = router({
   createLog: protectedProcedure
     .input(studentNewLogSchema)
     .mutation(async ({ ctx, input }) => {
-      const userTimezoneOffset = new Date().getTimezoneOffset() * 60000;
-      const postedAt = new Date(Date.now() - userTimezoneOffset)
+      // const userTimezoneOffset = new Date().getTimezoneOffset() * 60000;
+      // const postedAt = new Date(Date.now() - userTimezoneOffset)
 
-      const data = await ctx.prisma.studentActionLog.create({
-        data: {
-          ...input,
-          teacherId: ctx.auth.userId,
-          postedAt: postedAt.toISOString()
-        },
-        include: {
-          student: {
-            select: {
-              firstName: true,
-              lastName: true
-            }
-          },
-          action: true
-        }
-      })
+      // const student = await ctx.prisma.student.findUnique({
+      //   where: {
+      //     id: input.studentId
+      //   },
+      //   include: {
+      //     classrooms: {
+      //       include: {
+      //         classroom: {
+      //           include: {
+      //             teachers: true
+      //           }
+      //         }
+      //       }
+      //     }
+      //   }
+      // })
 
-      const parents = await ctx.prisma.parentStudent.findMany({
-        where: {
-          studentId: input.studentId
-        }
-      })
+      if (true) {
+        throw new Error("Student not found")
+      }
 
-      const pushTokens = await ctx.prisma.userPushToken.findMany({
-        where: {
-          userId: {
-            in: parents.map(parent => parent.userId)
-          }
-        }
-      })
-
-      pushTokens.forEach(pushToken => {
-        sendNotification(pushToken.pushToken,
-          {
-            body: `${data.student.firstName} ${data.student.lastName} ${data.action.name}`
-          }
-        )
-      })
-
-
-      return data
+      // const data = await ctx.prisma.studentActionLog.create({
+      //   data: {
+      //     ...input,
+      //     teacherId: ctx.auth.userId,
+      //     postedAt: postedAt.toISOString()
+      //   },
+      //   include: {
+      //     student: {
+      //       select: {
+      //         firstName: true,
+      //         lastName: true
+      //       }
+      //     },
+      //     action: true
+      //   }
+      // })
+      //
+      // const parents = await ctx.prisma.parentStudent.findMany({
+      //   where: {
+      //     studentId: input.studentId
+      //   }
+      // })
+      //
+      // const pushTokens = await ctx.prisma.userPushToken.findMany({
+      //   where: {
+      //     userId: {
+      //       in: parents.map(parent => parent.userId)
+      //     }
+      //   }
+      // })
+      //
+      // pushTokens.forEach(pushToken => {
+      //   sendNotification(pushToken.pushToken,
+      //     {
+      //       body: `${data.student.firstName} ${data.student.lastName} ${data.action.name}`
+      //     }
+      //   )
+      // })
+      //
+      //
+      // return data
     }),
   byIdProfile: protectedProcedure
     .input(z.object({
@@ -163,8 +182,6 @@ export const studentRouter = router({
       return ctx.prisma.student.findUnique({
         where: {
           id: input.studentId
-        },
-        include: {
         }
       })
     })

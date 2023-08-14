@@ -1,12 +1,12 @@
 import { useTheme } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { ActivityIndicator, View, Text, ScrollView } from "react-native";
+import { ActivityIndicator, View, ScrollView } from "react-native";
 import ContactInfoCard from "../components/contact-info-card";
 import ScreenWrapper from "../components/screen-wrapper";
-import { DefaultStackParamList } from "../contexts/StackProvider";
+import { StackParamList } from "../navigation";
 import { trpc } from "../utils/trpc";
 
-type StudentProfileProps = NativeStackScreenProps<DefaultStackParamList, 'StudentProfile'>;
+type StudentProfileProps = NativeStackScreenProps<StackParamList, 'StudentProfile'>;
 
 export function StudentProfile({ route }: StudentProfileProps) {
   const contactInfoQuery = trpc.contactInformation.allByStudentId.useQuery({

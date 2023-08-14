@@ -1,10 +1,8 @@
-import { Icon } from "@rneui/base";
 import { useEffect, useState } from "react";
-import { View } from "react-native";
 import { trpc } from "../utils/trpc";
 import { useUser } from "@clerk/clerk-expo";
 import { UserResource } from "@clerk/types";
-import { useTheme } from "@react-navigation/native";
+import { FAB } from "@rneui/themed";
 
 type AddActionButtonProps = {
   studentId: string
@@ -17,7 +15,6 @@ export default function StudentAddActionButton({
   studentId,
   setModalVisible
 }: AddActionButtonProps) {
-  const { colors } = useTheme();
   const user = useUser().user as User;
   const [canAddAction, setCanAddAction] = useState(false);
 
@@ -47,22 +44,13 @@ export default function StudentAddActionButton({
   }
 
   return (
-    <View style={{
-      position: 'absolute',
-      bottom: 35,
-      right: 10
-    }}>
-      <Icon
-        reverse
-        onPress={() => {
-          setModalVisible(true);
-        }}
-        raised
-        name='heartbeat'
-        type='font-awesome'
-        color={colors.primary}
-      />
-    </View>
+    <FAB
+      placement="right"
+      onPress={() => {
+        setModalVisible(true);
+      }}
+      icon={{ name: 'plus', type: 'font-awesome' }}
+    />
   )
 }
 

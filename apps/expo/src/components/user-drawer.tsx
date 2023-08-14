@@ -1,12 +1,12 @@
 import { useAuth, useUser } from "@clerk/clerk-expo";
 import { DrawerContentComponentProps } from "@react-navigation/drawer";
-import { useTheme } from "@react-navigation/native";
-import { Avatar } from "@rneui/themed";
-import { Pressable, SafeAreaView, Text, View } from "react-native";
+import { Avatar, ListItem, useTheme, Text, Button, Icon } from "@rneui/themed";
+import { useState } from "react";
+import { SafeAreaView, View } from "react-native";
+import EditThemeSheet from "./edit-theme-sheet";
 
 function SignOutButton() {
   const { isLoaded, signOut } = useAuth();
-  const { colors } = useTheme();
 
   if (!isLoaded) {
     return null;
@@ -14,33 +14,36 @@ function SignOutButton() {
 
   return (
     <View className="p-4">
-      <Pressable
-        style={{
-          backgroundColor: colors.primary
-        }}
-        className="rounded-full p-4"
+      <Button
+        color="secondary"
+        radius="xl"
         onPress={() => {
           signOut();
         }}
-      >
-        <Text className="font-semibold text-center"
-          style={{
-            color: colors.text
-          }}
-        >
-          Sign Out
-        </Text>
-      </Pressable>
+        title="Sign Out"
+      />
     </View>
+  )
+}
+
+function ThemeToggleButton({ setIsEditTheme }: { setIsEditTheme: (isEditTheme: boolean) => void }) {
+  return (
+    <Icon
+      onPress={() => {
+        setIsEditTheme(true)
+      }}
+      raised name="moon-o" type="font-awesome" />
   )
 }
 
 export default function UserDrawer(_props: DrawerContentComponentProps) {
   const user = useUser().user!
-  const { colors } = useTheme();
+  const { theme: { colors } } = useTheme();
+
+  const [isEditTheme, setIsEditTheme] = useState(false)
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
       <View className="flex flex-col gap-3 p-4 flex-grow">
         <View>
           <Avatar
@@ -48,15 +51,18 @@ export default function UserDrawer(_props: DrawerContentComponentProps) {
             source={{ uri: user.imageUrl }}
           />
         </View>
-        <Text
-          className="font-bold"
-          style={{
-            color: colors.text
-          }}
-        >
+        <Text h4>
           {user.fullName}
         </Text>
+
+        <ListItem onPress={() => {
+          console.log("viewable true")
+        }}>
+          <ListItem.Title>Edit Profile</ListItem.Title>
+        </ListItem>
       </View>
+      <ThemeToggleButton setIsEditTheme={setIsEditTheme} />
+      <EditThemeSheet modalVisible={isEditTheme} setModalVisible={setIsEditTheme} />
       <SignOutButton />
     </SafeAreaView>
   )

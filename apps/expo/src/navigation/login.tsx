@@ -1,5 +1,5 @@
-import { useTheme } from "@react-navigation/native"
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
+import { useTheme } from "@rneui/themed"
 import { SignIn } from "../screens/signin"
 import Verification from "../screens/verification"
 
@@ -13,7 +13,8 @@ export type SigninStackParamList = {
 const SigninStack = createNativeStackNavigator<SigninStackParamList>()
 
 export default function SigninNavigation() {
-  const { colors } = useTheme()
+  const { theme: { colors } } = useTheme()
+
   return (
     <SigninStack.Navigator>
       <SigninStack.Screen
@@ -27,10 +28,10 @@ export default function SigninNavigation() {
         component={Verification}
         options={{
           title: "Verification",
-          headerTintColor: colors.text,
+          headerTintColor: colors.primary,
           headerStyle: {
-            backgroundColor: colors.background,
-          },
+            backgroundColor: "transparent"
+          }
         }}
       />
     </SigninStack.Navigator>

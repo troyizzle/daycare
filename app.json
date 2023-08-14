@@ -1,0 +1,15 @@
+{
+  "expo": {
+    "extra": {
+      "eas": {
+        "projectId": "192b81d6-e739-44f5-ae0d-764207dde324"
+      }
+    },
+    "ios": {
+      "bundleIdentifier": "com.troyizzle.daycare"
+    },
+    "android": {
+      "package": "com.troyizzle.daycare"
+    }
+  }
+}

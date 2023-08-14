@@ -1,22 +1,16 @@
-import { useTheme } from "@react-navigation/native"
-import { SafeAreaView, View } from "react-native"
+import { SafeAreaView } from "react-native"
+import Background from "./background"
 
 type ScreenWrapperProps = {
   children: React.ReactNode
 }
 
 export default function ScreenWrapper({ children }: ScreenWrapperProps) {
-  const { colors } = useTheme()
-
   return (
     <SafeAreaView>
-      <View
-        style={{
-          backgroundColor: colors.background,
-          height: "100%",
-        }}>
+      <Background>
         {children}
-      </View>
+      </Background>
     </SafeAreaView>
   )
 }

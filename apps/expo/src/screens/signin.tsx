@@ -1,19 +1,17 @@
 import React from "react";
-import { View, SafeAreaView, Text, Pressable, useColorScheme } from "react-native";
-import LoginSVG from "../../assets/login.svg"
-import InputField from "../components/input-field";
+import { View } from "react-native";
+import ManComputerSVG from "../../assets/man-computer.svg"
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { SigninStackParamList } from "../navigation/login";
 import { Controller, useForm } from "react-hook-form"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useTheme } from "@react-navigation/native";
+import ScreenWrapper from "../components/screen-wrapper";
+import { Button, Input, Text } from "@rneui/themed";
 
 type SignInProps = NativeStackScreenProps<SigninStackParamList, "Signin">
 
 export function SignIn({ navigation }: SignInProps) {
-  const scheme = useColorScheme();
-  const { colors } = useTheme();
   const phoneNumberSchema = z.object({
     phoneNumber: z.string().min(10).max(10).regex(/^\d+$/)
   })
@@ -31,25 +29,19 @@ export function SignIn({ navigation }: SignInProps) {
   }
 
   return (
-    <SafeAreaView>
-      {scheme != "dark" && (
-        <View className="items-center">
-          <LoginSVG
-            height={200}
-            width={200}
-            style={{
-              transform: [{ rotate: "-5deg" }],
-            }}
-          />
-        </View>
-      )}
+    <ScreenWrapper>
+      <View className="flex items-center">
+        <ManComputerSVG
+          height={200}
+          width={200}
+        />
+      </View>
 
       <View className="h-full w-full p-3">
         <Text
           style={{
             fontSize: 28,
             fontWeight: '500',
-            color: colors.text,
             marginBottom: 10
           }}
         >
@@ -58,7 +50,7 @@ export function SignIn({ navigation }: SignInProps) {
         <Controller
           control={control}
           render={({ field: { onChange, value } }) => (
-            <InputField
+            <Input
               value={value}
               onChangeText={(text) => onChange(text)}
               placeholder="Phone Number..."
@@ -67,20 +59,13 @@ export function SignIn({ navigation }: SignInProps) {
           )}
           name="phoneNumber"
         />
-        <Pressable
+        <Button
+          color="primary"
           disabled={!formState.isValid || formState.isSubmitting}
-          className="rounded p-3 mt-3"
-          style={{
-            backgroundColor: colors.primary,
-            opacity: formState.isValid ? 1 : 0.5
-          }}
           onPress={handleSubmit(onSubmit)}
-        >
-          <Text className="text-white text-center">
-            {formState.isSubmitting ? "Submitting..." : "Get Code"}
-          </Text>
-        </Pressable>
+          title={formState.isSubmitting ? "Submitting..." : "Get Code"}
+        />
       </View>
-    </SafeAreaView >
+    </ScreenWrapper>
   );
 }

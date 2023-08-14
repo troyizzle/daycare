@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, ActivityIndicator, Dimensions } from "react-native";
+import { View, ActivityIndicator, Dimensions, useColorScheme } from "react-native";
 import { trpc } from "../utils/trpc";
 import { FlashList } from "@shopify/flash-list";
 import { Text } from '@rneui/themed';
@@ -7,17 +7,15 @@ import ScreenWrapper from "../components/screen-wrapper";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { Avatar } from "@rneui/base";
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { DefaultStackParamList } from "../contexts/StackProvider";
-import { useTheme } from "@react-navigation/native";
 import NewStudentActionForm from "../components/forms/new-student-log-form";
 import StudentActionLogItem from "../components/student-action-log-item";
 import StudentAddActionButton from "../components/student-add-action-button";
+import { StackParamList } from "../navigation";
 
-type StudentScreenProps = NativeStackScreenProps<DefaultStackParamList, 'Student'>
+type StudentScreenProps = NativeStackScreenProps<StackParamList, 'Student'>
 
 export function StudentScreen({ route }: StudentScreenProps) {
-  const { colors } = useTheme()
-
+  const colorScheme = useColorScheme();
   const [modalVisible, setModalVisible] = useState(false);
   const [chosenDate, setChosenDate] = useState(new Date());
 
@@ -38,9 +36,6 @@ export function StudentScreen({ route }: StudentScreenProps) {
         />
         <View className="flex flex-col grow ml-4">
           <Text
-            style={{
-              color: colors.text
-            }}
             h1
           >
             {route.params.name}
@@ -50,7 +45,6 @@ export function StudentScreen({ route }: StudentScreenProps) {
             <DateTimePicker
               mode="date"
               value={chosenDate}
-              dateFormat="day month year"
               timeZoneOffsetInSeconds={3600}
               onChange={(_event, selectedDate) => {
                 if (selectedDate) {
@@ -58,14 +52,14 @@ export function StudentScreen({ route }: StudentScreenProps) {
                   studentLogQuery.refetch()
                 }
               }}
-              themeVariant={useTheme().dark ? "dark" : "light"}
+              themeVariant={colorScheme == 'dark' ? 'dark' : 'light'}
             />
           </View>
         </View>
       </View>
 
       {studentLogQuery.isLoading && (
-        <View className="mt-2"><ActivityIndicator color={colors.primary} size="large" /></View>
+        <View className="mt-2"><ActivityIndicator size="large" /></View>
       )}
 
       {studentLogQuery.data && (
@@ -73,7 +67,7 @@ export function StudentScreen({ route }: StudentScreenProps) {
           <FlashList
             data={studentLogQuery.data}
             estimatedItemSize={20}
-            ItemSeparatorComponent={() => <View className="border-t" style={{ borderColor: colors.border }} />}
+            ItemSeparatorComponent={() => <View className="border-t" />}
             renderItem={({ item }) => (
               <View
                 style={{

@@ -1,11 +1,10 @@
-import { useTheme } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { StudentScreen } from "../screens/student";
-import { Pressable, Text } from "react-native";
 import { StudentProfile } from "../screens/student-profile";
 import UserDrawer from "../components/user-drawer";
 import { Home } from "../screens/home";
+import { Button, useTheme } from "@rneui/themed";
 
 export type StackParamList = {
   Main: undefined;
@@ -22,6 +21,8 @@ export type DrawerParamList = {
 const Drawer = createDrawerNavigator<DrawerParamList>();
 
 function Main() {
+  const { theme: { colors } } = useTheme()
+
   return (
     <Drawer.Navigator
       useLegacyImplementation
@@ -33,6 +34,9 @@ function Main() {
         component={Home}
         options={{
           headerTitle: '',
+          headerStyle: {
+            backgroundColor: colors.background
+          }
         }}
       />
     </Drawer.Navigator>
@@ -40,7 +44,7 @@ function Main() {
 }
 
 export default function Navigation() {
-  const { colors } = useTheme()
+  const { theme: { colors } } = useTheme()
 
   return (
     <Stack.Navigator>
@@ -56,12 +60,17 @@ export default function Navigation() {
         name="Student"
         component={StudentScreen}
         options={({ navigation, route }) => ({
+          headerStyle: {
+            backgroundColor: colors.background
+          },
           headerTitle: () => (
-            <Pressable onPress={() => navigation.navigate("StudentProfile", {
-              studentId: route.params.studentId
-            })}>
-              <Text style={{ color: colors.primary }}>{route.params.name}</Text>
-            </Pressable>
+            <Button
+              type="clear"
+              onPress={() => navigation.navigate("StudentProfile", {
+                studentId: route.params.studentId
+              })}
+              title={route.params.name}
+            />
           ),
         })}
       />

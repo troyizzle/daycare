@@ -3,11 +3,8 @@ import * as Notifications from 'expo-notifications';
 import { Platform } from 'react-native';
 import { useEffect, createContext, useContext, useRef } from 'react';
 import { trpc } from '../utils/trpc';
-import { sendNotification } from '../utils/push-notifications';
 
-type PushNotificationContext = {
-  sendNotification: (token: string, message: string) => Promise<void>
-}
+type PushNotificationContext = {}
 
 const PushNotificationContext = createContext({} as PushNotificationContext);
 
@@ -103,7 +100,6 @@ export default function PushNotificationProvider({ children }: PushNotificationP
 
   return (
     <PushNotificationContext.Provider value={{
-      sendNotification
     }}>
       {children}
     </PushNotificationContext.Provider>
