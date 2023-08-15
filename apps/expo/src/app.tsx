@@ -11,8 +11,6 @@ import Background from "./components/background";
 import ColorSchemeProvider from "./contexts/color-scheme-provider";
 import { StatusBar } from "react-native";
 
-
-
 export const App = () => {
   const theme = createTheme();
 
@@ -20,7 +18,23 @@ export const App = () => {
     <NavigationContainer>
       <ThemeProvider theme={theme}>
         <ColorSchemeProvider>
-          <Text>Hello</Text>
+          <Background>
+            <ClerkProvider
+              publishableKey="pk_test_d29uZHJvdXMtY293YmlyZC04LmNsZXJrLmFjY291bnRzLmRldiQ"
+              tokenCache={tokenCache}
+            >
+              <SignedIn>
+                <TRPCProvider>
+                  <PushNotificationProvider>
+                    <Navigation />
+                  </PushNotificationProvider>
+                </TRPCProvider>
+              </SignedIn>
+              <SignedOut>
+                <SigninNavigation />
+              </SignedOut>
+            </ClerkProvider>
+          </Background>
           <StatusBar />
         </ColorSchemeProvider>
       </ThemeProvider>
