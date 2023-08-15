@@ -86,8 +86,6 @@ export const userRouter = router({
           }
         })
 
-
-
         return {
           ...user,
           roles: roles,
@@ -95,6 +93,8 @@ export const userRouter = router({
           students: students
         }
       } catch (err) {
+        console.log(err)
+
         if (isClerkAPIResponseError(err)) {
           if (err.status === 404) {
             throw new TRPCError({
@@ -102,6 +102,12 @@ export const userRouter = router({
               message: 'User not found',
             })
           }
+
+          throw new TRPCError({
+            code: 'INTERNAL_SERVER_ERROR',
+            message: 'Internal server error',
+          })
+
         }
       }
     }),

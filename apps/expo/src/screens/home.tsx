@@ -136,14 +136,13 @@ export const Home = ({ navigation }: HomeProps) => {
           />
         }
       >
-        <Text>Welcome</Text>
         {userQuery.isLoading && <View className="min-h-screen justify-center items-center">
           <ActivityIndicator size="large" color={useTheme().colors.primary} />
         </View>
         }
 
         {userQuery.error && <View className="min-h-screen justify-center items-center">
-          <Text className="text-sky-50">Error {userQuery.error.message}</Text>
+          <Text className="text-sky-50">Query Error {userQuery.error.message}</Text>
         </View>
         }
 
