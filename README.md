@@ -1,6 +1,6 @@
-[![CI](https://github.com/perkinsjr/t3-turbo-and-clerk/actions/workflows/ci.yml/badge.svg)](https://github.com/perkinsjr/t3-turbo-and-clerk/actions/workflows/ci.yml)
+[![CI](https://github.com/troyizzle/daycare/actions/workflows/ci.yml/badge.svg)](https://github.com/troyizzle/daycare/actions/workflows/ci.yml)
 
-# Create T3 Turbo with Clerk Authentication
+# Daycare App
 
 ## Clerk Dashboard Setup
 
@@ -199,7 +199,3 @@ Deploying your Expo application works slightly differently compared to Next.js o
    > Your OTA (Over The Air) updates must always follow the app store's rules. You can't change your app's primary functionality without getting app store approval. But this is a fast way to update your app for minor changes and bug fixes.
 
 8. Done! Now that you have created your production build, submitted it to the stores, and installed EAS Update, you are ready for anything!
-
-## References
-
-The stack originates from [create-t3-turbo](https://github.com/t3-oss/create-t3-turbo).
