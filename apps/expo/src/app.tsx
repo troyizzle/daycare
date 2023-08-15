@@ -25,9 +25,7 @@ export const App = () => {
             >
               <SignedIn>
                 <TRPCProvider>
-                  <PushNotificationProvider>
-                    <Navigation />
-                  </PushNotificationProvider>
+                  <Navigation />
                 </TRPCProvider>
               </SignedIn>
               <SignedOut>

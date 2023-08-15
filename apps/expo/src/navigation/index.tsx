@@ -25,7 +25,6 @@ function Main() {
 
   return (
     <Drawer.Navigator
-      useLegacyImplementation
       initialRouteName="Home"
       drawerContent={(props) => <UserDrawer {...props} />}
     >

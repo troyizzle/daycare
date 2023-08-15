@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ActivityIndicator, Alert, Dimensions, RefreshControl, ScrollView, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, Dimensions, RefreshControl, ScrollView, TouchableOpacity, View } from "react-native";
 import { FlashList } from "@shopify/flash-list";
 import { trpc } from "../utils/trpc";
 import ScreenWrapper from "../components/screen-wrapper";
@@ -119,6 +119,12 @@ type HomeProps = CompositeScreenProps<
 >
 
 export const Home = ({ navigation }: HomeProps) => {
+  const user = useUser().user!
+
+  const userQuery = trpc.user.byId.useQuery({
+    id: user.id
+  })
+
   return (
     <ScreenWrapper>
       <ScrollView
@@ -131,6 +137,17 @@ export const Home = ({ navigation }: HomeProps) => {
         }
       >
         <Text>Welcome</Text>
+        {userQuery.isLoading && <View className="min-h-screen justify-center items-center">
+          <ActivityIndicator size="large" color={useTheme().colors.primary} />
+        </View>
+        }
+
+        {userQuery.error && <View className="min-h-screen justify-center items-center">
+          <Text className="text-sky-50">Error {userQuery.error.message}</Text>
+        </View>
+        }
+
+        {userQuery.data && <StudentDisplay user={userQuery.data} navigation={navigation} />}
       </ScrollView>
     </ScreenWrapper >
   );
