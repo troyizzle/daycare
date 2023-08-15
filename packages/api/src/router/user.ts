@@ -68,23 +68,29 @@ export const userRouter = router({
           }
         })
 
-        const students = await ctx.prisma.classroomStudents.findMany({
+        const classroomIds = await ctx.prisma.classroomTeachers.findMany({
           where: {
-            classroomId: {
-              in: await ctx.prisma.classroomTeachers.findMany({
-                where: {
-                  teacherId: user.id
-                },
-                select: {
-                  classroomId: true
-                }
-              }).then(records => records.map(record => record.classroomId))
-            }
+            teacherId: user.id
           },
-          include: {
-            student: true
+          select: {
+            classroomId: true
           }
         })
+
+        let students = []
+
+        if (classroomIds.length > 0) {
+          students = await ctx.prisma.classroomStudents.findMany({
+            where: {
+              classroomId: {
+                in: classroomIds.then(records => records.map(record => record.classroomId))
+              }
+            },
+            include: {
+              student: true
+            }
+          })
+        }
 
         return {
           ...user,
@@ -93,8 +99,6 @@ export const userRouter = router({
           students: students
         }
       } catch (err) {
-        console.log(err)
-
         if (isClerkAPIResponseError(err)) {
           if (err.status === 404) {
             throw new TRPCError({
