@@ -3,7 +3,7 @@ import { ExpoConfig, ConfigContext } from "@expo/config";
 const CLERK_PUBLISHABLE_KEY = "your-clerk-publishable-key";
 
 const defineConfig = (_ctx: ConfigContext): ExpoConfig => ({
-  name: "daycare",
+  name: "splashing-stone-daycare",
   slug: "daycare",
   version: "1.0.0",
   orientation: "portrait",
@@ -18,13 +18,18 @@ const defineConfig = (_ctx: ConfigContext): ExpoConfig => ({
   },
   updates: {
     fallbackToCacheTimeout: 0,
+    url: "https://u.expo.dev/192b81d6-e739-44f5-ae0d-764207dde324"
   },
   assetBundlePatterns: ["**/*"],
   ios: {
     supportsTablet: true,
-    bundleIdentifier: "your.bundle.identifier",
+    bundleIdentifier: "com.troyizzle.daycare",
+    runtimeVersion: {
+      policy: "sdkVersion"
+    }
   },
   android: {
+    runtimeVersion: "1.0.0",
     adaptiveIcon: {
       foregroundImage: "./assets/splash.png",
     },
