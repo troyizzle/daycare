@@ -5,6 +5,7 @@ import { isClerkAPIResponseError } from "@clerk/nextjs"
 import { inferProcedureOutput, TRPCError } from "@trpc/server";
 import { userCreateSchema, userUpdateSchema } from "../../../db/schema/user"
 import { AppRouter } from ".";
+import { Student } from ".prisma/client";
 
 export type UserAllResponse = inferProcedureOutput<AppRouter['user']['all']>
 export type UserByIdResponse = inferProcedureOutput<AppRouter['user']['byId']>
@@ -77,7 +78,7 @@ export const userRouter = router({
           }
         })
 
-        let students = []
+        let students: Student[] = []
 
         if (classroomIds.length > 0) {
           students = await ctx.prisma.classroomStudents.findMany({
