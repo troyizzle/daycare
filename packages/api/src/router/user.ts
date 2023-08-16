@@ -114,6 +114,7 @@ export const userRouter = router({
         }
       } catch (err) {
         if (isClerkAPIResponseError(err)) {
+          console.log(err)
           if (err.status === 404) {
             throw new TRPCError({
               code: 'NOT_FOUND',
