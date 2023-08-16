@@ -78,6 +78,7 @@ export const userRouter = router({
           }
         })
 
+<<<<<<< HEAD
         let students: Student[] = []
 
         if (classroomIds.length > 0) {
@@ -93,11 +94,23 @@ export const userRouter = router({
           })
         }
 
+=======
+>>>>>>> da07517 (fix student type)
         return {
           ...user,
           roles: roles,
           children: children,
-          students: students
+          students: classroomIds.length == 0 ? null :
+            await ctx.prisma.classroomStudents.findMany({
+              where: {
+                classroomId: {
+                  in: classroomIds.map(record => record.classroomId)
+                }
+              },
+              include: {
+                student: true
+              }
+            })
         }
       } catch (err) {
         if (isClerkAPIResponseError(err)) {
