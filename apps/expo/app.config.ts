@@ -24,7 +24,7 @@ const defineConfig = (_ctx: ConfigContext): ExpoConfig => ({
   ios: {
     supportsTablet: true,
     bundleIdentifier: "com.troyizzle.daycare",
-    buildNumber: "5.0.1",
+    buildNumber: "6.0.1",
     runtimeVersion: {
       policy: "sdkVersion"
     }

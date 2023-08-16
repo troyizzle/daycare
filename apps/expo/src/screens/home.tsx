@@ -136,6 +136,7 @@ export const Home = ({ navigation }: HomeProps) => {
           />
         }
       >
+        <Text>{process && process.env.NODE_ENV}</Text>
         {userQuery.isLoading && <View className="min-h-screen justify-center items-center">
           <ActivityIndicator size="large" color={useTheme().colors.primary} />
         </View>
