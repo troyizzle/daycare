@@ -22,6 +22,5 @@
   },
   "include": [
     ".eslintrc.cjs"
-  ],
-  "extends": "expo/tsconfig.base"
+  ]
 }
