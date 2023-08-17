@@ -23,12 +23,7 @@
 
 import { authMiddleware } from "@clerk/nextjs"
 
-export default authMiddleware({
-  afterAuth: async (auth) => {
-    console.log("after auth", auth)
-    console.log("aouth token", await auth.getToken())
-  }
-});
+export default authMiddleware();
 
  export const config = {
   matcher: ["/((?!.*\\..*|_next).*)", "/", "/(api|trpc)(.*)"],
