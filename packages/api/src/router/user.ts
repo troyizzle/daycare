@@ -43,7 +43,7 @@ export const userRouter = router({
       }
     })
   }),
-  byId: publicProcedure
+  byId: protectedProcedure
     .input(z.object({
       id: z.string()
     }))
