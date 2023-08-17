@@ -24,8 +24,8 @@
 import { authMiddleware } from "@clerk/nextjs"
 
 export default authMiddleware({
-  beforeAuth: (req) => {
-    console.log("BEFORE AUTH", req)
+  afterAuth: (auth) => {
+    console.log("after auth", auth)
   }
 });
 
