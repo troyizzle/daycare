@@ -47,7 +47,8 @@ export const userRouter = router({
     .input(z.object({
       id: z.string()
     }))
-    .query(async ({ ctx, input }) => {
+    .query(({ ctx, input }) => {
+      return ctx.auth
       try {
         const user = await clerkClient.users.getUser(input.id)
 
