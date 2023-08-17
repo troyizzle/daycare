@@ -1,4 +1,4 @@
-import { router, protectedProcedure } from "../trpc";
+import { router, protectedProcedure, publicProcedure } from "../trpc";
 import { clerkClient } from "@clerk/nextjs"
 import { z } from "zod";
 import { isClerkAPIResponseError } from "@clerk/nextjs"
@@ -43,7 +43,7 @@ export const userRouter = router({
       }
     })
   }),
-  byId: protectedProcedure
+  byId: publicProcedure
     .input(z.object({
       id: z.string()
     }))

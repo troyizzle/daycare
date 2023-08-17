@@ -26,6 +26,7 @@ import { authMiddleware } from "@clerk/nextjs"
 export default authMiddleware({
   afterAuth: (auth) => {
     console.log("after auth", auth)
+    console.log(auth.getToken())
   }
 });
 
