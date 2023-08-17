@@ -37,6 +37,9 @@ yarn-error.log*
 .env
 .env*.local
 
+apps/expo/build*
+apps/expo/.tool-versions
+
 # vercel
 .vercel
 

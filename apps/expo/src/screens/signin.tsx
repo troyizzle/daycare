@@ -8,6 +8,7 @@ import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import ScreenWrapper from "../components/screen-wrapper";
 import { Button, Input, Text } from "@rneui/themed";
+import SignInWithOAuth from "../components/oauth";
 
 type SignInProps = NativeStackScreenProps<SigninStackParamList, "Signin">
 
@@ -65,6 +66,7 @@ export function SignIn({ navigation }: SignInProps) {
           onPress={handleSubmit(onSubmit)}
           title={formState.isSubmitting ? "Submitting..." : "Get Code"}
         />
+        <SignInWithOAuth />
       </View>
     </ScreenWrapper>
   );

@@ -5,7 +5,7 @@ import { trpc } from "../utils/trpc";
 import ScreenWrapper from "../components/screen-wrapper";
 import { Text, Tab, TabView } from "@rneui/themed";
 import { CompositeScreenProps, useTheme } from "@react-navigation/native";
-import { useUser } from "@clerk/clerk-expo";
+import { SignedIn, useUser } from "@clerk/clerk-expo";
 import { UserByIdResponse } from "@acme/api/src/router/user";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import StudentListItem from "../components/student-list-item";
@@ -119,10 +119,12 @@ type HomeProps = CompositeScreenProps<
 >
 
 export const Home = ({ navigation }: HomeProps) => {
-  const user = useUser().user!
+  const { user } = useUser()
 
   const userQuery = trpc.user.byId.useQuery({
-    id: user.id
+    id: user?.id as string
+  }, {
+    enabled: !!user
   })
 
   return (
@@ -136,7 +138,7 @@ export const Home = ({ navigation }: HomeProps) => {
           />
         }
       >
-        <Text>{process && process.env.NODE_ENV}</Text>
+        <SignedIn><Text>You are signed in as {user?.fullName}</Text></SignedIn>
         {userQuery.isLoading && <View className="min-h-screen justify-center items-center">
           <ActivityIndicator size="large" color={useTheme().colors.primary} />
         </View>

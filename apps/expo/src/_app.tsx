@@ -1,7 +1,6 @@
 import * as React from "react";
 import { TRPCProvider } from "./utils/trpc";
 import { ClerkProvider, SignedIn, SignedOut } from "@clerk/clerk-expo";
-import { tokenCache } from "./utils/cache";
 import { NavigationContainer } from '@react-navigation/native';
 import PushNotificationProvider from "./contexts/PushNotificationProvider";
 import Navigation from "./navigation";
@@ -10,6 +9,8 @@ import { createTheme, Text, ThemeProvider } from "@rneui/themed";
 import Background from "./components/background";
 import ColorSchemeProvider from "./contexts/color-scheme-provider";
 import { StatusBar } from "react-native";
+import { tokenCache } from "./utils/cache";
+import Constants from "expo-constants";
 
 export const App = () => {
   const theme = createTheme();
@@ -20,7 +21,7 @@ export const App = () => {
         <ColorSchemeProvider>
           <Background>
             <ClerkProvider
-              publishableKey="pk_test_d29uZHJvdXMtY293YmlyZC04LmNsZXJrLmFjY291bnRzLmRldiQ"
+              publishableKey={Constants.expoConfig?.extra?.CLERK_PUBLISHABLE_KEY}
               tokenCache={tokenCache}
             >
               <SignedIn>
